@@ -15,7 +15,7 @@
 \rhead{\today}
 \fancyfoot{}
 \rfoot{\thepage}
-\lfoot{\includegraphics[height=20pt]{http://paul.chesnais.com/assets/favicon.png}}
+\lfoot{\includegraphics[height=20pt]{Logo}}
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0.5pt}
 
@@ -33,26 +33,54 @@
 \definecolor{FunctionName}{rgb}{0,0,0}
 \definecolor{Operators}{rgb}{0,0,0}
 \definecolor{Background}{rgb}{0.98,0.98,0.98}
+\definecolor{mygreen}{RGB}{28,172,0}
+\definecolor{mylilas}{RGB}{170,55,241}
 
-\lstset{numbers=left,numberstyle=\footnotesize,numbersep=1em,xleftmargin=1em,
-framextopmargin=2em,framexbottommargin=2em,showspaces=false,showtabs=false,
-showstringspaces=false,frame=l,tabsize=4,basicstyle=\ttfamily\small\setstretch{1},
-backgroundcolor=\color{Background},language=Python,
-commentstyle=\color{Comments}\slshape,stringstyle=\color{Strings},
-morecomment=[s][\color{Strings}]{"""}{"""},
-morecomment=[s][\color{Strings}]{'''}{'''},morekeywords={import,from,class,def,
-for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,
-None,access,as,del,except,exec,finally,global,import,lambda,pass,print,raise,try,
-assert},keywordstyle={\color{Keywords}\bfseries},morekeywords={[2]@invariant},
-keywordstyle={[2]\color{Decorators}\slshape},emph={self},
-emphstyle={\color{self}\slshape},breaklines=true}
+\lstdefinestyle{python}{
+  backgroundcolor=\color{Background},basicstyle=\ttfamily\small\setstretch{1},breaklines=true,
+  commentstyle=\color{Comments}\slshape,emph={self},emphstyle={\color{self}\slshape},frame=l,framexbottommargin=2em,
+  framextopmargin=2em,keywordstyle={[2]\color{Decorators}\slshape},keywordstyle={\color{Keywords}\bfseries},
+  language=Python,morecomment=[s][\color{Strings}]{"""}{"""},morecomment=[s][\color{Strings}]{'''}{'''},
+  morekeywords={[2]@invariant},morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,
+  continue,return,True,False,None,access,as,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+  numbers=left,numbersep=1em,numberstyle=\footnotesize,showspaces=false,showstringspaces=false,showtabs=false,
+  stringstyle=\color{Strings},tabsize=4,xleftmargin=1em,
+}
 
+
+\lstdefinestyle{matlab}{
+  backgroundcolor=\color{Background},basicstyle=\ttfamily\small\setstretch{1},breaklines=true,
+  commentstyle=\color{mygreen},emph=[1]{for,end,break},emphstyle=[1]\color{red},frame=l,identifierstyle=\color{black},
+  keywordstyle=[2]{\color{black}},keywordstyle=\color{blue},language=Matlab,literate={~} {\texttildelow}{1},
+  morekeywords=[2]{1},morekeywords={matlab2tikz},numbers=left,numbersep=9pt,numberstyle={\tiny \color{black}},
+  showstringspaces=false,stringstyle=\color{mylilas},
+}
 
 \begin{document}
 \maketitle
 \thispagestyle{empty}
 
-\href{http://paul.chesnais.com/assets/favicon.png}{blop}
+\section{Abstract}
+\label{sec:abstract}
+
+\section{Executive Summary}
+\label{sec:executive_summary}
+
+
+% Antoine's stuff and thing
+\section{Deterministic Model}
+\label{sec:deterministic_model}
+
+
+% Paul's stuff and things
+\section{Stochastic Model}
+\label{sec:stochastic_model}
+
+\begin{lstlisting}[style=python]
+class Bloop:
+  def __init__(self):
+    yourmother
+\end{lstlisting}
 
 \begin{thebibliography}{9}
   \bibitem{pmc}
