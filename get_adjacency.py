@@ -36,7 +36,7 @@ def maxpair(p):
     return max(p[:2])
 
 def to_matlab(mat):
-    s = '['
+    s = 'm = ['
     for row in mat:
         s += str(row) + ';'
 
