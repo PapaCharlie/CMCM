@@ -19,13 +19,14 @@ def get_pairs(filename, names):
         for row in r:
             a = names[row[0]]
             b = names[row[1]]
-            t = (a, b, row[2])
+            t = (a, b, int(row[2]))
             pairs.append(t)
 
         return pairs
 
 def get_adjacency(pairs):
-    matsize = max(pairs, key=maxpair)
+    maxtuple = max(pairs, key=maxpair)
+    matsize = max(maxtuple) + 1
     mat = [[0 for a in range(matsize)] for a in range(matsize)]
     for p in pairs:
         mat[p[1]][p[0]] = p[2]
@@ -44,7 +45,7 @@ def to_matlab(mat):
 
 if __name__ == "__main__":
     names = get_name_map("mississippi_county.list")
-    pairs = get_pairs("graph.csv", names)
+    pairs = get_pairs("mississippi_graph_NS.csv", names)
     mat = get_adjacency(pairs)
     s = to_matlab(mat)
     print s
