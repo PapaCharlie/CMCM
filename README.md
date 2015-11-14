@@ -1,4 +1,4 @@
-To input Python files, use `\lstinputlisting[style=python]{path/to/file.py}`, and `\lstinputlisting[style=matlab]{path/to/file.m}` for MATLAB files. Similarly, for Python typesetting, do:
+To input Python files, use `\lstinputlisting[style=python]{path/to/file.py}`, and `\lstinputlisting[style=matlab]{path/to/file.m}` for Matlab files. Similarly, for Python typesetting, do:
 ```
 \begin{lstlisting}[style=python]
 class Bloop:
@@ -6,3 +6,4 @@ class Bloop:
     ...
 \end{lstlisting}
 ```
+Same for Matlab files.
