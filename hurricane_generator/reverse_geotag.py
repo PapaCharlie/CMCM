@@ -19,9 +19,9 @@ while row < num_rows:
 	if data.ix[row][0][0:2] == 'AL':
 		row = row + 1
 		pass
-	latitude = data.ix[row][4][1:5]
+	latitude = data.ix[row][4][1:5].strip()
 	print latitude
-	longitude = "-" + data.ix[row][5][2:6]
+	longitude = "-" + data.ix[row][5][2:6].strip()
 	print longitude
 	(county,state) = geo_tag(latitude, longitude)
 	if county != None:
