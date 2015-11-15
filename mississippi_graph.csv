@@ -1,3 +1,4 @@
+C1,C2,CAPACITY
 Tate,DeSoto,3
 Tunica,DeSoto,6
 Lafayette,Marshall,1
@@ -109,7 +110,6 @@ Hancock,PearlRiver,1
 Harrison,Stone,3
 Jackson,George,3
 Lee,Union,2
-
 DeSoto,Marshall,4
 Tunica,Tate,1
 Coahoma,Quitman,1

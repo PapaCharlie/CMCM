@@ -1,2 +1,3 @@
-class Node:
-    def __init__(self, north, west, population)
+class County:
+    def __init__(self, location, population, neighbors):
+        self.location =
