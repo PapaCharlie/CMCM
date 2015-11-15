@@ -14,6 +14,7 @@ all:
 clean:
 	-rm $(PDF)
 	-rm -rf .build/*
+	-rm *.pyc
 
 links:
 	-rm $(PDF)
