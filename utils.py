@@ -2,6 +2,16 @@
 
 import csv
 
+def get_population(filename):
+    with open(filename, 'rb') as fh:
+        r = csv.DictReader(fh)
+        pairs = []
+        for row in r:
+            t = (row['NAME'], int(row['POPULATION']))
+            pairs.append(t)
+
+        return pairs
+
 def get_name_map(filename):
     with open(filename, 'rb') as fh:
         h = {}
@@ -12,17 +22,10 @@ def get_name_map(filename):
 
         return h
 
-def to_matlab(mat):
-    s = 'm = ['
+def to_matlab(mat, mname = 'm'):
+    s = mname + ' = ['
     for row in mat:
-        s += str(row) + ';'
+        s += str(row) + ';\n'
 
-    return s + ']'
-
-if __name__ == "__main__":
-    names = get_name_map("mississippi_county.list")
-    pairs = get_pairs("mississippi_graph_NS.csv", names)
-    mat = get_adjacency(pairs)
-    s = to_matlab(mat)
-    print s
+    return s + '];'
 

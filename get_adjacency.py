@@ -21,6 +21,7 @@ def get_adjacency(pairs):
     mat = [[0 for a in range(matsize)] for a in range(matsize)]
     for p in pairs:
         mat[p[1]][p[0]] = p[2]
+        # mat[p[0]][p[1]] = -p[2]
 
     return mat
 
@@ -31,6 +32,6 @@ if __name__ == "__main__":
     names = utils.get_name_map("mississippi_county.list")
     pairs = get_pairs("mississippi_graph_NS.csv", names)
     mat = get_adjacency(pairs)
-    s = utils.to_matlab(mat)
+    s = utils.to_matlab(mat, 'adj')
     print s
 
