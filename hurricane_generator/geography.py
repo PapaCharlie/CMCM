@@ -5,12 +5,10 @@ def geo_tag(lat, lon, delay=1):
     url = "https://maps.googleapis.com/maps/api/geocode/json?"
     url += "latlng=%s,%s&sensor=false" % (lat, lon)
     url += "&key=AIzaSyAe_x2u6tRdLob41KRAvLw6b91MQ3W0NxI"
-    print url
     try:
         v = urlopen(url).read()
     except Exception as e:
         print e
-        print "RECONNECT"
         time.sleep(delay)
         return geo_tag(lat, lon, delay + 1)
     j = json.loads(v)

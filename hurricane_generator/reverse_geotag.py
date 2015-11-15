@@ -13,7 +13,7 @@ num_rows = data.shape[0]
 
 open('geo_tags.csv', 'w').close()
 
-row = 1450
+row = 1462
 while row < num_rows:
 	print "Row: " + str(row)
 	if data.ix[row][0][0:2] == 'AL':
