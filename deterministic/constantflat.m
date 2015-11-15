@@ -7,6 +7,10 @@ adjacency % adj
 orig_adj = adj;
 for i=1:length(adj)
     adj(:,i) = adj(:,i) * 3000 / pops(i);
+    s = sum(adj);
+    if s(i) > 0.95
+        adj(:,i) = adj(:, i) * 0.95 / s(i);
+    end
 end
 
 A = getA(adj);

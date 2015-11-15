@@ -6,6 +6,10 @@ adjacency % adj
 
 for i=1:length(adj)
     adj(:,i) = adj(:,i) * 3000 / pops(i);
+    s = sum(adj);
+    if s(i) > 0.95
+        adj(:,i) = adj(:, i) * 0.95 / s(i);
+    end
 end
 R = sum(adj);
 
@@ -22,5 +26,5 @@ for t=0:1:max_t
     curr_pop = A * curr_pop;
 end
 
-% figure
-% plot(interest(:,30))
+figure
+plot(interest(:,30))
