@@ -1,4 +1,3 @@
-C1,C2,CAPACITY
 Tate,DeSoto,3
 Tunica,DeSoto,6
 Lafayette,Marshall,1
@@ -23,7 +22,6 @@ Tallahatchie,Quitman,1
 Bolivar,Coahoma,3
 Sunflower,Coahoma,1
 Sunflower,Tallahatchie,1
-Leflore,Tallahatchie,1
 Carroll,Grenada,2
 Montgomery,Grenada,3
 Webster,Calhoun,1
@@ -37,7 +35,6 @@ Winston,Oktibbeha,2
 Winston,Choctaw,1
 Choctaw,Webster,2
 Leflore,Tallahatchie,1
-Bolivar,Coahoma,3
 Sunflower,Bolivar,1
 Washington,Sunflower,2
 Humphreys,Sunflower,2
@@ -122,20 +119,16 @@ Tippah,OOS1,1
 Alcorn,OOS1,3
 Tishomingo,OOS1,1
 Tishomingo,OOS6,3
-Alcorn,Tishomingo,2
 Prentiss,Tishomingo,2
 Tippah,Alcorn,1
 Itawamba,OOS6,3
-Prentiss,Union,1
 Pontotoc,Lee,1
 Lafayette,Pontotoc,2
 Panola,Lafayette,2
 Tallahatchie,Yalobusha,1
 Yalobusha,Calhoun,1
-Bolivar,Sunflower,1
 Grenada,Calhoun,1
 Grenada,Tallahatchie,1
-Leflore,Tallahatchie,1
 Sunflower,Leflore,3
 Calhoun,Chickasaw,2
 Chickasaw,Monroe,2
@@ -146,11 +139,9 @@ Oktibbeha,Choctaw,1
 Webster,Montgomery,2
 Montgomery,Carroll,2
 Carroll,Leflore,2
-Washington,Sunflower,2
 Washington,OOS2,2
 Washington,Humphreys,1
 Humphreys,Holmes,1
-Holmes,Attala,3
 Attala,Winston,1
 Monroe,OOS6,1
 Lowndes,OOS6,5
@@ -161,14 +152,12 @@ Neshoba,Kemper,2
 Leake,Neshoba,1
 Issaquena,Sharkey,2
 Sharkey,Yazoo,1
-Rankin,Scott,3
 Scott,Newton,3
 Newton,Lauderdale,3
 Lauderdale,OOS5,4
 Clarke,OOS5,1
 Smith,Jasper,1
 Jasper,Clarke,1
-Simpson,Smith,1
 Hinds,Rankin,8
 Jefferson,Copiah,1
 Copiah,Simpson,1
@@ -185,7 +174,6 @@ Adams,Franklin,2
 Wilkinson,OOS3,1
 Wilkinson,OOS4,3
 Wilkinson,Amite,1
-Adams,Franklin,2
 Amite,Pike,1
 Pike,Walthall,3
 Walthall,Marion,3
