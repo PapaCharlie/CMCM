@@ -1,10 +1,12 @@
 populations % pops
 adjacency % adj
-adj = 0.01 * adj;
 
 % pops = [100; 10; 10];
 % adj = [ 0, 0, 0; 0.1, 0, 0; 0, 0.1, 0; ];
 
+for i=1:length(adj)
+    adj(:,i) = adj(:,i) * 3000 / pops(i);
+end
 R = sum(adj);
 
 A = adj;
@@ -14,11 +16,11 @@ end
 
 curr_pop = pops;
 interest = [];
-max_t = 3000;
+max_t = 97;
 for t=0:1:max_t
-    interest = [interest curr_pop(5)];
+    interest = [interest; (curr_pop ./ pops)'];
     curr_pop = A * curr_pop;
 end
 
-figure
-plot(interest)
+% figure
+% plot(interest(:,30))
