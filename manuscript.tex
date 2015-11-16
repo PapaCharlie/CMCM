@@ -115,12 +115,13 @@
     Given that we have a network structure and associated population flow rates, this problem lends itself well to a Markov process analysis. We can model our evacuation strategy by converting the network of Mississippi counties into a directed graph. For our northward evacuation, this means only drawing highway-based edges to destination nodes with higher latitudes:
     \begin{figure}[H]
       \centering
-      \includegraphics[width=.5\textwidth]{figures/full_directed_ns.pdf}
+      \includegraphics[width=.5\textwidth]{figures/full_directed_NS.pdf}
       \caption{Map of Northbound Highway Routes in the State of Mississippi \cite{ms_highways}}
     \end{figure}
-    The thickness of each arrow in this graph represents the transition probability from one node to another. Then each edge transition probability in this graph determines the proportion of a county's population that travels to a destination node during a single update. We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
+    The thickness of each arrow in this graph represents the transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to a destination node during a single update. In order We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
 
   \subsection{Parameter Values and Justification}
+    Using our earlier values for the maximum flow rate of an edge, we can now use this 
   \subsection{Results}
   \subsection{Strengths and Weaknesses}
 
