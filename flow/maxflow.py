@@ -27,7 +27,6 @@ if __name__ == "__main__":
     for p in range(len(positions)):
         (x, y) = positions[p]
         pos[p+1] = [x, -y]
-        p += 1
 
     for e in edges:
         edge = g.add_edge(e[0]+1, e[1]+1)
@@ -64,3 +63,4 @@ if __name__ == "__main__":
             vertex_font_size=15, output="dope_tities.pdf",
             fit_view=True, output_size=(800, 1200))
 
+    print mc
