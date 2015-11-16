@@ -89,12 +89,13 @@
   \centering
   \includegraphics[width=.5\textwidth]{ms_highways.pdf}
   \caption{Map of Major Highways in the State of Mississippi \cite{ms_highways}}
+  \label{fig:highway_map}
   \end{figure}
   \par
     In this figure, the thick black lines represent four lane highways while the red lines represent two lane highways. We assume that despite the ensuing panic, evacuees still travel along the right side of the highway, even if this means lanes going the other way (towards the hurricane) are underutilized. Therefore, for every thick black line spanning two counties, the appropriate edge in the graph gains two additional lanes, whereas red lines add one lane. Summing the contributions of all lanes a pair of counties therefore gives us an single edge weight in the graph.
   \newline
   \par
-    We assume that there is a fixed spacing between every car on every highway. Then all cars travel at the same speed, and the density of cars is uniform along the entire length of every highway. This determines a fixed flow rate per edge capacity, and allows us to compute the number of cars that can travel to another county in a given time interval. 
+    We assume that there is a fixed spacing between every car on every highway. Then all cars travel at the same speed, and the density of cars is uniform along the entire length of every highway. This determines a fixed flow rate per edge capacity, and allows us to compute the number of cars that can travel to another county in a given time interval.
 
 \section{Historical Hurricane Trends}
 \label{sec:hurricanes}
@@ -120,7 +121,7 @@
   \subsection{Model Description}
     \par In this model, instead of giving citizens particular evacuation plan, we give them a simple rule: move directly away from the hurricane landfall if possible, else move North or North-West. Using the statewide broadcast system, the state of Mississippi can tell its citizens where the expected landfall will be, and which counties will be the most affected. In which case, individual citizens are instructed to leave the counties that will be flooded, and to do so as outlined above. This means less coordination from the state, and more options for each citizens. At the cost of not having designated areas, and therefore designated refuge areas for citizens, evacuation is faster because it involves less per-county organization.
   \subsection{Parameter Values and Justification}
-    \par As opposed to the model described in \nameref{sec:maxflow}, we also allow citizens to leave the state of Mississippi. For example, Arkansas is less likely to be hit by the full force of hurricanes that move through Mississippi \cite{5news}, as such, it is a good place to take refuge while the storm passes. As such, we add ``unofficial'' nodes in the graph representation of Mississippi.
+    \par As opposed to the model described in \nameref{sec:maxflow}, we also allow citizens to leave the state of Mississippi. For example, Arkansas is less likely to be hit by the full force of hurricanes that move through Mississippi \cite{5news}, as such, it is a good place to take refuge while the storm passes. As such, we add ``unofficial'' nodes in the graph representation of Mississippi. Figure~\ref{fig:highway_map} shows that Hancock and Jackson Counties have roads that lead into Louisiana and Alabama respectively, both of which are potential routes away from the Hurricane's landfall.
   \subsection{Results}
 
     \begin{figure}
@@ -157,6 +158,9 @@
 
     \bibitem{5news}
       \url{http://5newsonline.com/2012/08/27/garretts-blog-hurricanes-in-arkansas/}
+
+    \bibitem{famsize}
+      \url{http://www.statista.com/statistics/183657/average-size-of-a-family-in-the-us/}
 
   \end{thebibliography}
 
