@@ -12,9 +12,10 @@ if __name__ == "__main__":
 
     names = utils.get_name_map("../mississippi_county.list")
     edges = utils.get_edges("../mississippi_graph_NS.csv", names)
+    edges += utils.get_edges("../mississippi_graph_EW.csv", names)
 
     g = Graph()
-    g.set_directed(True)
+    g.set_directed(False)
     vertices = g.add_vertex(len(names))
     cap = g.new_edge_property("double")
     pos = g.new_vertex_property("vector<double>")
