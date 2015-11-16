@@ -48,10 +48,10 @@
 
 \lstdefinestyle{Matlab}{
   backgroundcolor=\color{Background},basicstyle=\ttfamily\small\setstretch{1},breaklines=true,
-  commentstyle=\color{mygreen},emph=[1]{for,end,break},emphstyle=[1]\color{red},frame=l,identifierstyle=\color{black},
-  keywordstyle=[2]{\color{black}},keywordstyle=\color{blue},language=Matlab,literate={~} {\texttildelow}{1},
-  morekeywords=[2]{1},morekeywords={matlab2tikz},numbers=left,numbersep=9pt,numberstyle={\tiny \color{black}},
-  showstringspaces=false,stringstyle=\color{mylilas},
+  commentstyle=\color{Comments}\slshape,emph=[1]{for,end,break},emphstyle=[1]\color{red},frame=l,identifierstyle=\color{black},
+  keywordstyle=[2]{\color{black}},keywordstyle={\color{blue}\bfseries},language=Matlab,literate={~} {\texttildelow}{1},
+  morekeywords=[2]{1},morekeywords={matlab2tikz},numbers=left,numbersep=1em,numberstyle=\footnotesize,
+  showstringspaces=false,stringstyle=\color{Strings},xleftmargin=1em,
 }
 
 \begin{document}
@@ -123,7 +123,7 @@
     A second key assumption is that the transition probabilities of the graph remain fixed over the entire course of the simulation. The real world implications of this are that county populations converge towards 0 rather than allowing for a full evacuation in a finite number of time steps. This is an assumption that we deem  We standardize the time for an update to be one hour, and track the number of people in every county through the 4 day period before landfall.
 
   \subsection{Parameter Values and Justification}
-    Using our earlier values for the maximum flow rate of an edge, we can now use this 
+    Using our earlier values for the maximum flow rate of an edge, we can now use this
   \subsection{Results}
   \subsection{Strengths and Weaknesses}
     By aggregating population in the northernmost counties, this model as a limiting assumption that evacuees never leave Mississippi.
@@ -139,7 +139,7 @@
     \par It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
   \subsection{Results}
   \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure~\ref{fig:oldmaxflow}.
-  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster). 
+  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster).
   Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road. Figure~\ref{fig:newmaxflow}
     \begin{figure}
       \center
@@ -167,7 +167,7 @@
     So according to this model, if we decided to evacuate everyone in the southern counties all at once, it would take upwards of a day to get everyone to safe counties.
   \subsection{Strengths and Weaknesses}
     % TODO
-    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation. 
+    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation.
 
 \section{Stochastic Model of Landfall-Avodiant Evacuations}
 \label{sec:stochastic}
@@ -175,8 +175,9 @@
     \par In this model, instead of giving citizens particular evacuation plan, we give them a simple rule: move directly away from the hurricane landfall if possible, else move North or North-West. Using the statewide broadcast system, the state of Mississippi can tell its citizens where the expected landfall will be, and which counties will be the most affected. In which case, individual citizens are instructed to leave the counties that will be flooded, and to do so as outlined above. This means less coordination from the state, and more options for each citizens. At the cost of not having designated areas, and therefore designated refuge areas for citizens, evacuation is faster because it involves less per-county organization.\\
     \par As opposed to the model described in \nameref{sec:maxflow}, we also allow citizens to leave the state of Mississippi. For example, Arkansas is less likely to be hit by the full force of hurricanes that move through Mississippi \cite{5news}, as such, it is a good place to take refuge while the storm passes. In order to achieve this, we add ``unofficial'' nodes in the graph representation of Mississippi. Figure~\ref{fig:highway_map} shows that Hancock and Jackson Counties have roads that lead into Louisiana and Alabama respectively, both of which are potential routes away from the Hurricane's landfall, meaning that such nodes are important when movement can also be lateral. Because we are only interested in the movement of citizens within Mississippi, we can assume that citizens that reach the out-of-state nodes keep moving further and further away from the hurricane, though we are not tracking them. We created four out-of-state nodes North, South, East and West of Mississippi, each connected in a way that satisfies the highways mapped in Figure~\ref{fig:highway_map}.
   \subsection{Parameter Values and Justification}
-    \par The parameters to this model are the same as the parameters for the models outlined above, except that this model uses the complete highway map of Mississippi, instead of only considering vertical highways. This algorithm expects three inputs outside of the parameters: the first, less accurate estimate of the affected counties, the more accurate second estimate and the final, most accurate estimate. Notice that as described, these inputs actually abstract away the hurricane's category. Instead, the category is reflected by the size of the list of the affected counties given as the respective inputs for the estimates.
+    \par The parameters to this model are the same as the parameters for the models outlined above, except that this model uses the complete highway map of Mississippi, instead of only considering vertical highways. This algorithm expects three inputs outside of the parameters: the first, less accurate estimate of the affected counties, the more accurate second estimate and the final, most accurate estimate. Notice that as described, these inputs actually abstract away the hurricane's category. Instead, the category is reflected by the size of the list of the affected counties given as the respective inputs for the estimates. In order to generate these input, we used the historical hurricane data. Given the landfall and the hurricane's category, we can generate three sets of decreasing size containing neighboring counties. We can then run the simulation on these inputs.
   \subsection{Results}
+    This model's main goal is to find the amount of time it takes to evacuate the affected states.
     \begin{figure}
       \center
       \begin{subfigure}[b]{0.5\textwidth}
@@ -190,6 +191,7 @@
         \caption{Predicted Evacuation for Landfall in Jackson County}
       \end{subfigure}
       \caption{}
+      \label{}
     \end{figure}
   \subsection{Strengths and Weaknesses}
 
