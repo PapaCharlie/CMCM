@@ -4,10 +4,12 @@ from graph_tool.all import *
 import graph_tool.flow as gt
 import pickle as pk
 
-def create(nodeweights):
+def color_from_weight(w):
+    w = min(1, w)
+    color = [1-w, w, 0, 1]
+    return color
 
-
-if __name__ == "__main__":
+def create_graph_weights(nodeweights):
     positions = pk.load(open("county_locations.dict"))
     positions = sorted(positions.items(), key=lambda (k, v) : k)
     positions = map(lambda (k, v) : (v[1], v[0]), positions)
@@ -20,6 +22,10 @@ if __name__ == "__main__":
     vertices = g.add_vertex(len(names))
     cap = g.new_edge_property("double")
     pos = g.new_vertex_property("vector<double>")
+    colors = g.new_vertex_property("vector<double>")
+
+    for i in range(len(nodeweights)):
+        colors[i] = color_from_weight(nodeweights[i])
 
     for p in range(len(positions)):
         (x, y) = positions[p]
@@ -30,7 +36,8 @@ if __name__ == "__main__":
         cap[edge] = e[2]
 
     graph_draw(g, pos=pos, edge_pen_width=prop_to_size(cap, mi=1, ma=10, power=1),
+            vertex_fill_color=colors,
             vertex_text=g.vertex_index,
-            vertex_font_size=15, output="just_tities.pdf",
+            vertex_font_size=15, output="colored_graph.pdf",
             fit_view=True, output_size=(800, 1200))
 
