@@ -256,29 +256,27 @@ Paul Chesnais, Antoine Pourchet, and Ryan Vogan
 
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}
 \label{sec:maxflow}
+  After designing our first model, we realized that it was a naive assumption to have every road carrying traffic its maximum capacity. Actual flow rates would be dependent upon network structure as a whole and the resulting congestion. Because of this, we decided to perform a maximum flow analysis on our earlier strategy of evacuees moving northward.
   \subsection{Model Description}
-    \par In this model, we will approach as a network flow problem. The nodes of this graph will be the counties, and the edges are the roads connecting them together. Since we also have a quantifiable way to compare roads based on their potential throughput, we can label those as the capacities of the edges.
-    In order to get an idea of how many people can evacuate in a northbound manner, we can compute the maximum flow of the network. The location of the dividing line between the two partitions will also tell us the areas sof congestions, which will lead us to interesting plans.
+    \par In this model, we will use the same approach of a network flow problem. The nodes of this graph will be the counties, and the edges are the roads connecting them together. Since we also have a quantifiable way to compare roads based on their potential throughput, we can label those as the capacities of the edges. In order to evaluate a south to north maximum flow, we add a super source node below our north-bound graph and connect it to every county on the coast using edges of infinite capacity. Similarly, we connect every county along the northern border of Mississippi to a super sink node using edges of infinite capacity. In order to get an idea of how many people can evacuate in a northbound manner, we can compute the maximum flow of this new network. The location of the dividing line between the two partitions will also tell us the areas of highest traffic congestion. This is because a maximum flow algorithm finds the minimum sized cut to partition a graph. Because all traffic entering the second partition must cross this cut, it represents a bottleneck for the flow.
   \subsection{Parameter Values and Justification}
-    \par Now, in order to be able to compute the flow through the graph, we have to make it directed, and come up with a general rule for which directions we want to consider. After a lot of research, we saw that more often than not, going northbound was the best reaction to most hurricanes in Mississippi (because most of the hurricanes made landfall on the south coast).
-    We also add two nodes to that graph that will act as the source and the sink (which are necessary for computing the maximum flow through the graph).
-    \par It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
+    \par Now, in order to be able to compute the flow through the graph, we have to make it directed, and come up with a general rule for which directions we want to consider. After a lot of research, we saw that more often than not, going northbound was the best reaction to most hurricanes in Mississippi (because most of the hurricanes made landfall on the south coast). It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
   \subsection{Results}
-  \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure~\ref{fig:oldmaxflow}.
+  \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure9 .
   \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster).
-  Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road. Figure~\ref{fig:newmaxflow}
-    \begin{figure}
+  Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road.
+    \begin{figure}[H]
       \center
       \begin{subfigure}[b]{0.5\textwidth}
         \center
-        \includegraphics[width=\textwidth]{figures/old_maxflow-crop.pdf}
-        \caption{Maximum Flow Partitions}
+        \includegraphics[width=.5\textwidth]{figures/old_maxflow-crop.pdf}
+        \caption*{Maximum Flow Partitions}
         \label{fig:oldmaxflow}
       \end{subfigure}~
       \begin{subfigure}[b]{0.5\textwidth}
         \center
-        \includegraphics[width=\textwidth]{figures/maxflow_directed-crop.pdf}
-        \caption{Maximum Flow Partitions}
+        \includegraphics[width=.5\textwidth]{figures/maxflow_directed-crop.pdf}
+        \caption*{Maximum Flow Partitions With George-Perry Connection}
         \label{fig:newmaxflow}
       \end{subfigure}
       \caption{}
@@ -290,11 +288,12 @@ Paul Chesnais, Antoine Pourchet, and Ryan Vogan
         t^* &= \frac{532480}{21000}\\
         t^* &= 25 \text{hrs}
     \end{align*}
-    So according to this model, if we decided to evacuate everyone in the southern counties all at once, it would take upwards of a day to get everyone to safe counties. Just to be safe, we can wait until two days prior to landfall before we order county wide evacuations.
+    So according to this model, if we decided to evacuate everyone in the southern counties all at once, it would take upwards of a day to get everyone to safe counties. Just to be safe, we can wait until two days prior to landfall before we order county wide evacuations. Because maximum flow algorithms can return the amount of flow traveling across every edge in the network, we can use this to set the traffic rates/evacuation routes for every highway connection. While this would require a great deal of government coordination, itts optimality guarantees
+
   \subsection{Strengths and Weaknesses}
-    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation. % TODO FINISH THIS
-    % Weaknesses
-    This model assumes a best case scenario for the utilization of the roads, whereas in reality, people will rarely use the fastest path to a destination. Their behavior will make for a much slower evacuation. We don't really have a way to tell each car what route it should or shouldn't take in order to make the evacuation as speedy as possible, as it would mean sacrificing some drivers for the benefit of others.
+    A great strength of this model is that it leverages an algorithm who's result is provably optimal. Rather than giving a general strategy to the governor, this allows us to specify the traffic that should be flowing across every single highway. Another strength is that it gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation.\\
+    \\
+    Potential downsides are that this model assumes a best case scenario for the utilization of the roads, whereas in reality, people will rarely use the fastest path to a destination. Their behavior will make for a much slower evacuation. Also, we don't really have a way to tell each car what route it should or shouldn't take in order to make the evacuation as speedy as possible, as it would mean sacrificing some drivers for the benefit of Pareto-optimality.
 
 \section{Heuristic Model of Landfall-Avoiding Evacuations}
 \label{sec:heuristic}
