@@ -2,6 +2,7 @@ SHELL := /bin/sh
 
 SRC := $(wildcard *.tex)
 PDF := $(SRC:.tex=.pdf)
+FIGURES := $(filter-out $(wildcard figures/*-crop.pdf), $(wildcard figures/*.pdf))
 
 all:
 	-mkdir .build
@@ -11,12 +12,15 @@ all:
 	done
 	make links
 
+crop:
+	for fig in $(FIGURES) ; do \
+		pdfcrop $$fig ; \
+	done
+
 clean:
 	-rm $(PDF)
 	-rm -rf .build/*
-	-rm *.pyc
 
 links:
 	-rm $(PDF)
 	ln -s .build/*.pdf .
-
