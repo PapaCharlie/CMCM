@@ -63,12 +63,12 @@
 
 \section{Introduction}
 \label{sec:introduction}
-  The Mississippi Emergency Management Administration (MSEMA) has hired our team to design evacuation routes for at-risk counties in the coastal regions of southern Mississippi. Given that this coastal area is a strong commercial center, the government authorities want us to minimize the number of unnecessary evacuations. Under this requirement, it is more advantageous to withhold ordering an evacuation for as long as safely possible. The reasons for this are two-fold. First, this ensures that local businesses can remain open for as long as possible. Second, this ensures that the forecasts at the time of the evacuation order are as accurate as possible. Therefore, our models seek to recommend an optimal evacuation plan as well as the latest possible time at which it is safe to enact this plan.
+  The Mississippi Emergency Management Administration (MSEMA) has hired our team to design hurricane evacuation routes for at-risk counties in the coastal regions of southern Mississippi. Given that this coastal area is a strong commercial center, the government authorities want us to minimize the number of unnecessary evacuations. Under this requirement, it is more advantageous to withhold ordering an evacuation for as long as safely possible. The reasons for this are two-fold. First, this ensures that local businesses can remain open for as long as possible. Second, this ensures that the forecasts at the time of the evacuation decision are as accurate as possible. Therefore, our models seek to recommend an optimal evacuation plan as well as the latest possible time at which it is safe to enact this plan.
 
 \section{Network Representation of Mississippi}
 \label{sec:representation}
   \par
-    The MSEMA specified that our plan should be enacted on a per-county basis. As you can see in the following figure, these counties are approximately equally sized. As a result of this, we assume that each county can be modeled as a single node in a bidirectional graph. Then an edge from node $i$ to node $j$ represents an available evacuation route from county $i$ to county $j$. Therefore, we constructed a network of Mississippi counties by connecting each county's node to the nodes of all bordering counties that are connected by roads:
+    The MSEMA specified that our plan should be enacted on a per-county basis. As you can see in the following figure, these counties are approximately equally sized. As a result of this, we assume that each county can be modeled as a single node in a bidirectional graph. Then an edge from node $i$ to node $j$ represents an available evacuation route from county $i$ to county $j$. In all of our models we assume that highways are the only means of evacuation. Therefore, we constructed a network of Mississippi counties by connecting each county's node to the nodes of all bordering counties directly reachable by highways:
   \begin{figure}[H]
     \center
     \begin{subfigure}[b]{0.5\textwidth}
@@ -84,7 +84,7 @@
     \caption*{}
   \end{figure}
   \par
-    In all of our models we assume that highways are the only means of evacuation. Because Mississippi has varying highway structure, it would be inappropriate to assume uniform travel rates between county pairs. In order to capture this homogeneity in the network model, we decided to assign weights to every edge. Then a single edge weight represents a carrying capacity for the amount of travel possible between two counties. For a real-world mapping, we assume that this would correspond to the total number of highway lanes spanning two counties. Therefore, we were able to assign edge weights across this graph by using the following highway map:
+     Because Mississippi has varying highway structure, it would be inappropriate to assume uniform travel rates between county pairs. In order to capture this heterogeneity in the network model, we decided to assign weights to every edge. Then a single edge weight represents a carrying capacity for the amount of travel possible between two counties. For a real-world mapping, we assume that this would correspond to the total number of highway lanes spanning two counties. Therefore, we were able to assign edge weights across the entire graph by using the following highway map:
   \begin{figure}[H]
   \centering
   \includegraphics[width=.5\textwidth]{ms_highways.pdf}
@@ -92,10 +92,14 @@
   \label{fig:highway_map}
   \end{figure}
   \par
-    In this figure, the thick black lines represent four lane highways while the red lines represent two lane highways. We assume that despite the ensuing panic, evacuees still travel along the right side of the highway, even if this means lanes going the other way (towards the hurricane) are underutilized. Therefore, for every thick black line spanning two counties, the appropriate edge in the graph gains two additional lanes, whereas red lines add one lane. Summing the contributions of all lanes a pair of counties therefore gives us an single edge weight in the graph.
+    In this figure, the thick black lines represent four lane highways while the red lines represent two lane highways. We assume that despite the ensuing panic, evacuees still travel along the right side of the highway, even if this means lanes going the other way (towards the hurricane) are underutilized. Therefore, for every thick black line spanning two counties, the appropriate edge in the graph gains two additional lanes, whereas red lines add one lane. Summing the lane contributions of all highways for a pair of counties therefore gives us an single edge weight in the graph.
   \newline
   \par
-    We assume that there is a fixed spacing between every car on every highway. Then all cars travel at the same speed, and the density of cars is uniform along the entire length of every highway. This determines a fixed flow rate per edge capacity, and allows us to compute the number of cars that can travel to another county in a given time interval.
+    We assume that there is a fixed spacing between every car on every highway. Then all cars travel at the same speed, and the density of cars is uniform along the entire length of every highway. This determines a fixed flow rate per edge capacity, and allows us to compute the number of cars traveling to another county in a given time interval. Because of the inevitable traffic congestion during an evacuation, we set the fixed speed to a relatively slow $10$ km/hr. In a traffic jam situation like this, we expect a tight traffic density of one car every 10 meters. Therefore:
+    \[
+      \frac{10\ \text{km/hr}}{10\ \text{m/car}} = 1000\ \text{cars/hr}
+    \]
+    We assume that evacuees travel with friends and family in their cars. Because the average size of an American family is \texttildelow 3 persons \cite{famsize}, we conclude that 3000 people per hour can use a single lane to another county. Maximum population flow rates between each county are therefore three thousand times the corresponding edge weight.
 
 \section{Historical Hurricane Trends}
 \label{sec:hurricanes}
@@ -151,11 +155,11 @@
 \section{Stochastic Model of Landfall-Avodiant Evacuations}
 \label{sec:stochastic}
   \subsection{Model Description}
-    \par In this model, instead of giving citizens particular evacuation plan, we give them a simple rule: move directly away from the hurricane landfall if possible, else move North or North-West. Using the statewide broadcast system, the state of Mississippi can tell its citizens where the expected landfall will be, and which counties will be the most affected. In which case, individual citizens are instructed to leave the counties that will be flooded, and to do so as outlined above. This means less coordination from the state, and more options for each citizens. At the cost of not having designated areas, and therefore designated refuge areas for citizens, evacuation is faster because it involves less per-county organization.
+    \par In this model, instead of giving citizens particular evacuation plan, we give them a simple rule: move directly away from the hurricane landfall if possible, else move North or North-West. Using the statewide broadcast system, the state of Mississippi can tell its citizens where the expected landfall will be, and which counties will be the most affected. In which case, individual citizens are instructed to leave the counties that will be flooded, and to do so as outlined above. This means less coordination from the state, and more options for each citizens. At the cost of not having designated areas, and therefore designated refuge areas for citizens, evacuation is faster because it involves less per-county organization.\\
+    \par As opposed to the model described in \nameref{sec:maxflow}, we also allow citizens to leave the state of Mississippi. For example, Arkansas is less likely to be hit by the full force of hurricanes that move through Mississippi \cite{5news}, as such, it is a good place to take refuge while the storm passes. In order to achieve this, we add ``unofficial'' nodes in the graph representation of Mississippi. Figure~\ref{fig:highway_map} shows that Hancock and Jackson Counties have roads that lead into Louisiana and Alabama respectively, both of which are potential routes away from the Hurricane's landfall, meaning that such nodes are important when movement can also be lateral. Because we are only interested in the movement of citizens within Mississippi, we can assume that citizens that reach the out-of-state nodes keep moving further and further away from the hurricane, though we are not tracking them. We created four out-of-state nodes North, South, East and West of Mississippi, each connected in a way that satisfies the highways mapped in Figure~\ref{fig:highway_map}.
   \subsection{Parameter Values and Justification}
-    \par As opposed to the model described in \nameref{sec:maxflow}, we also allow citizens to leave the state of Mississippi. For example, Arkansas is less likely to be hit by the full force of hurricanes that move through Mississippi \cite{5news}, as such, it is a good place to take refuge while the storm passes. As such, we add ``unofficial'' nodes in the graph representation of Mississippi. Figure~\ref{fig:highway_map} shows that Hancock and Jackson Counties have roads that lead into Louisiana and Alabama respectively, both of which are potential routes away from the Hurricane's landfall.
+    \par The parameters to this model are the same as the parameters for the models outlined above, except that this model uses the complete highway map of Mississippi, instead of only considering vertical highways. This algorithm expects three inputs outside of the parameters: the first, less accurate estimate of the affected counties, the more accurate second estimate and the final, most accurate estimate. Notice that as described, these inputs actually abstract away the hurricane's category. Instead, the category is reflected by the
   \subsection{Results}
-
     \begin{figure}
       \center
       \begin{subfigure}[b]{0.5\textwidth}
@@ -187,15 +191,14 @@
       \url{https://www.mississippi.org/assets/docs/library/ms_highways.pdf}
     \bibitem{pmc}
       \url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4060166/}
-
     \bibitem{5news}
       \url{http://5newsonline.com/2012/08/27/garretts-blog-hurricanes-in-arkansas/}
-
     \bibitem{famsize}
       \url{http://www.statista.com/statistics/183657/average-size-of-a-family-in-the-us/}
     \bibitem{graphtool}
       \url{http://graph-tool.skewed.de/}
-
+    \bibitem{census}
+      \url{http://census.ire.org/data/bulkdata.html}
   \end{thebibliography}
 
 \end{document}
