@@ -112,15 +112,16 @@
 \label{sec:markov}
   Because our analysis of historical hurricane trends concluded that the vast majority of landfalls occur in the three southern-most counties, the first evacuation strategy we tested was one where all evacuees move strictly northward.
   \subsection{Model Description}
-    Given that we have a network structure and associated population flow rates, this problem lends itself well to a Markov process analysis. We can model our evacuation strategy by converting the network of Mississippi counties into a directed graph. For our northward evacuation, this means only drawing highway edges to destination nodes with higher latitudes:
+    Given that we have a network structure and associated population flow rates, this problem lends itself well to a Markov process analysis. We can model our evacuation strategy by converting the network of Mississippi counties into a directed graph. For our northward evacuation, this means only drawing highway-based edges to destination nodes with higher latitudes:
     \begin{figure}[H]
       \centering
-      \includegraphics[width=.5\textwidth]{full_directed_ns.pdf}
-      \caption{Map of Major Highways in the State of Mississippi \cite{ms_highways}}
+      \includegraphics[width=.5\textwidth]{figures/full_directed_NS.pdf}
+      \caption{Map of Northbound Highway Routes in the State of Mississippi \cite{ms_highways}}
     \end{figure}
-    Then each edge transition probability in this graph determines the proportion of a county's population that travels to a destination node during a single update. We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
+    The thickness of each arrow in this graph represents the transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to a destination node during a single update. In order We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
 
   \subsection{Parameter Values and Justification}
+    Using our earlier values for the maximum flow rate of an edge, we can now use this 
   \subsection{Results}
   \subsection{Strengths and Weaknesses}
 
@@ -135,7 +136,7 @@
     \par It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
   \subsection{Results}
   \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure~\ref{fig:oldmaxflow}.
-  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster).
+  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster). 
   Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road. Figure~\ref{fig:newmaxflow}
     \begin{figure}
       \center
@@ -157,11 +158,13 @@
     The total population of the evacuated counties is 616338. So let us compute the theoretical lower bound for how long it would take to evacuate those states fully:
     \begin{align*}
         t^* &= \frac{\text{total population}}{\text{max flow}}\\
-        t^* &= \frac{616338}{27000}\\
-        t^* &= 10 \text{hrs}
+        t^* &= \frac{532480}{21000}\\
+        t^* &= 25 \text{hrs}
     \end{align*}
+    So according to this model, if we decided to evacuate everyone in the southern counties all at once, it would take upwards of a day to get everyone to safe counties.
   \subsection{Strengths and Weaknesses}
-    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation.
+    % TODO
+    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation. 
 
 \section{Stochastic Model of Landfall-Avodiant Evacuations}
 \label{sec:stochastic}
