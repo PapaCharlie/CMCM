@@ -63,7 +63,7 @@
 
 \section{Introduction}
 \label{sec:introduction}
-  The Mississippi Emergency Management Administration (MSEMA) has hired our team to design evacuation routes for at-risk counties in the coastal regions of southern Mississippi. Given that this coastal area is a strong commercial center, the govermental authorities want to minimize the number of unnecessary evacuations. Under this requirement, it is more advantageous to withhold ordering an evacuation for as long as possible. The reasons for this are two-fold. First, this ensures that local businesses can remain open for as long as possible. Second, this ensures that the forecasting reports at the time of the evacuation order are as accurate as possible. Therefore, our models seek to recommend an optimal evacuation plan as well as the latest possible time at which it is safe to enact this plan.
+  The Mississippi Emergency Management Administration (MSEMA) has hired our team to design evacuation routes for at-risk counties in the coastal regions of southern Mississippi. Given that this coastal area is a strong commercial center, the governmental authorities want to minimize the number of unnecessary evacuations. Under this requirement, it is more advantageous to withhold ordering an evacuation for as long as possible. The reasons for this are two-fold. First, this ensures that local businesses can remain open for as long as possible. Second, this ensures that the forecasting reports at the time of the evacuation order are as accurate as possible. Therefore, our models seek to recommend an optimal evacuation plan as well as the latest possible time at which it is safe to enact this plan.
 
 \section{Model Assumptions}
 \label{sec:assumptions}
@@ -73,7 +73,12 @@
   \includegraphics[width=.5\textwidth]{figures/county_map.jpg}
   \caption{A Map of Counties in the State of Mississippi \cite{county_map}}
   \end{figure}
-  As a result of this, we assume that each county can be modeled as a single node in a bidirected graph. Here an edge from node $i$ to node $j$ represents that a refugee can directly reach county $j$ from county $i$. Therefore, we constructed our network of Mississippi counties by connecting a county's node to the nodes of all bordering counties. This produced the following graph:
+  As a result of this, we assume that each county can be modeled as a single node in an undirected graph. Here an edge from node $i$ to node $j$ represents that a refugee can directly reach county $j$ from county $i$. Therefore, we constructed our network of Mississippi counties by connecting a county's node to the nodes of all bordering counties. This produced the following graph:
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\textwidth]{figures/full_undirected.pdf}
+  \caption{Undirected Graph Representing Mississippi Counties}
+  \end{figure}
 
 
   
