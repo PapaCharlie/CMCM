@@ -24,12 +24,10 @@ def main(predictions):
             pops = map(lambda c: County(c).get_population(), bad_counties)
             hours.append(pops)
             if all(map(lambda p: p == 0, pops)):
-                print bad_counties
-                print map(lambda c: County(c).get_county_name(), bad_counties)
+                print " ".join(map(lambda c: County(c).get_county_name(), bad_counties))
                 return hours
 
-    print bad_counties
-    print map(lambda c: County(c).get_county_name(), bad_counties)
+    print " ".join(map(lambda c: County(c).get_county_name(), bad_counties))
     return hours
 
 
@@ -43,6 +41,5 @@ if __name__ == '__main__':
                 map(lambda c: county_map[c], ['Hancock','Harrison','Jackson'])]
     hours = main(args)
 
-    s = "m = [" + ";\n".join(map(lambda h: "[" + ",".join(map(str, h)) + "]", hours)) + "]"
-    print s
-    open('populations_per_hour.m', 'w').write(s)
+    s = "m = [" + ";\n".join(map(lambda h: "[" + ",".join(map(str, h)) + "]", hours)) + "];\n"
+    open(argv[1] + '.m', 'w').write(s)
