@@ -27,6 +27,8 @@ def get_edges(filename, names):
         pairs = []
         r = csv.reader(csvfile)
         for row in r:
+            if row[0] not in names or row[1] not in names:
+                continue
             a = names[row[0]]
             b = names[row[1]]
             t = (a, b, int(row[2]))
