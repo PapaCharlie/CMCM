@@ -136,7 +136,7 @@
     \par It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
   \subsection{Results}
   \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure~\ref{fig:oldmaxflow}.
-  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster).
+  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster). 
   Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road. Figure~\ref{fig:newmaxflow}
     \begin{figure}
       \center
@@ -158,11 +158,13 @@
     The total population of the evacuated counties is 616338. So let us compute the theoretical lower bound for how long it would take to evacuate those states fully:
     \begin{align*}
         t^* &= \frac{\text{total population}}{\text{max flow}}\\
-        t^* &= \frac{616338}{27000}\\
-        t^* &= 10 \text{hrs}
+        t^* &= \frac{532480}{21000}\\
+        t^* &= 25 \text{hrs}
     \end{align*}
+    So according to this model, if we decided to evacuate everyone in the southern counties all at once, it would take upwards of a day to get everyone to safe counties.
   \subsection{Strengths and Weaknesses}
-    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation.
+    % TODO
+    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation. 
 
 \section{Stochastic Model of Landfall-Avodiant Evacuations}
 \label{sec:stochastic}
