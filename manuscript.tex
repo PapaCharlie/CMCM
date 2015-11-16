@@ -140,7 +140,7 @@
     \begin{align*}
         threshold(c, h) = 0.1 \cdot 2^{||c-h||_2 / h.radius} \cdot \frac{1}{h.category}
     \end{align*}
-    In addition to this, if a county is further away than 3 times the radius of the hurricane, that county does not need to be evacuated, and we tag it as a refugee state (it essentially has infinite threshold). Furthermore, category 1 hurricanes have a threshold minimum of 50\% (we do not require more than half of the population of any county to evacuate). 
+    In addition to this, if a county is further away than 3 times the radius of the hurricane, that county does not need to be evacuated, and we tag it as a refugee state (it essentially has infinite threshold). Furthermore, category 1 hurricanes have a threshold minimum of 50\% (we do not require more than half of the population of any county to evacuate).
     The heatmaps for those thresholds can be observed in Figure~\ref{fig:thresholds}. These were generated from a category 1 hurricane (a) that then grows in size (b) and finally becomes category 5 (c).
     \begin{figure}[H]
       \center
@@ -205,7 +205,7 @@
     % Its not a one-size-fits all which is good and bad
     By aggregating population in the northernmost counties, this model as a limiting assumption that evacuees never leave Mississippi.
     Weakness that people flee even if they are aleady in the safe zone.
-    Weak in the 
+    Weak in the
 
 
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}
@@ -250,7 +250,7 @@
     % Weaknesses
     This model assumes a best case scenario for the utilization of the roads, whereas in reality, people will rarely use the fastest path to a destination. Their behavior will make for a much slower evacuation. We don't really have a way to tell each car what route it should or shouldn't take in order to make the evacuation as speedy as possible, as it would mean sacrificing some drivers for the benefit of others.
 
-\section{Heuristic Model of Landfall-Avodiant Evacuations}
+\section{Heuristic Model of Landfall-Avoiding Evacuations}
 \label{sec:heuristic}
   \subsection{Model Description}
     \par In this model, instead of giving citizens particular evacuation plan, we give them a simple rule: move directly away from the hurricane landfall if possible, else move North or North-West. Using the statewide broadcast system, the state of Mississippi can tell its citizens where the expected landfall will be, and which counties will be the most affected. In which case, individual citizens are instructed to leave the counties that will be flooded, and to do so as outlined above. This means less coordination from the state, and more options for each citizens. At the cost of not having designated areas, and therefore designated refuge areas for citizens, evacuation is faster because it involves less per-county organization.\\
@@ -258,7 +258,7 @@
   \subsection{Parameter Values and Justification}
     \par The parameters to this model are the same as the parameters for the models outlined above, except that this model uses the complete highway map of Mississippi, instead of only considering vertical highways. This algorithm expects three inputs outside of the parameters: the first, less accurate estimate of the affected counties, the more accurate second estimate and the final, most accurate estimate. Notice that as described, these inputs actually abstract away the hurricane's category. Instead, the category is reflected by the size of the list of the affected counties given as the respective inputs for the estimates. In order to generate these input, we used the historical hurricane data. Given the landfall and the hurricane's category, we can generate three sets of decreasing size containing neighboring counties. We can then run the simulation on these inputs. For the first 48 hours, we start to evacuate all the counties listed in the less accurate estimated, then for the second to last day we use the more accurate set of counties to pick which ones to evacuate, and finally the most accurate estimate is used for the last 24 hours.
   \subsection{Results}
-    \par This model's main goal is to find the amount of time it takes to evacuate the affected counties, given the estimated floods. After 100 simulations with the parameters described above, we find that it consistently takes less than 50 hours to evacuate all the at-risk counties. Figures \ref{fig:stochastic_out_large} and \ref{fig:stochastic_out_small} depict the evolution of the county populations when the impending hurricane is of category 1 and 5 respectively. The hurricane in Figure~\ref{fig:stochastic_out_large} is coming from the West, and a such, the population of Jackson County initially peaks as everyone moves east and directly away from the hurricane's projected landfall, then decreases as citizens start then making their way north and out of the state. In Figure~\ref{fig:stochastic_out_small}, the hurricane comes directly from the South. There is a slight flaw in the graph in that Harrison County is represented to be lower than Jackson County, and the connectivity between the two is quite high. As such, people from Harrison County will seek refuge in Jackson County before moving North.
+    \par This model's main goal is to find the amount of time it takes to evacuate the affected counties, given the estimated floods. After 100 simulations with the parameters described above, we find that it consistently takes less than 50 hours to evacuate all the at-risk counties. Figures \ref{fig:stochastic_out_large} and \ref{fig:stochastic_out_small} depict the evolution of the county populations when the impending hurricane is of category 5 and 1 respectively. The hurricane in Figure~\ref{fig:stochastic_out_large} is coming from the West, and a such, the population of Jackson County initially peaks as everyone moves east and directly away from the hurricane's projected landfall, then decreases as citizens start then making their way north and out of the state. In Figure~\ref{fig:stochastic_out_small}, the hurricane comes directly from the South. There is a slight flaw in the graph in that Harrison County is represented to be lower than Jackson County, and the connectivity between the two is quite high. As such, people from Harrison County will seek refuge in Jackson County before moving North.
     \par There was also a large congestion observed in Greene County. It would seem that on their way North, citizens have trouble exiting this county. The model described in \nameref{sec:maxflow} concluded that adding highways in this area of Mississippi would drastically improve the flow of citizens. This heuristic model reflects that this is a high congestion area and supports the idea that adding roads there would increase citizen flow.
     \begin{figure}
       \center
@@ -274,7 +274,7 @@
         \caption{Predicted Evacuation for Landfall in Jackson County}
         \label{fig:stochastic_out_small}
       \end{subfigure}
-      \caption{}
+      \caption{Evacuation Comparison for Category 5 and 1 Hurricanes}
       \label{fig:stochastic_out}
     \end{figure}
   \subsection{Strengths and Weaknesses}
@@ -283,6 +283,9 @@
 
 \section{Conclusions}
 \label{sec:conclusions}
+\par The first thing that we want to conclude on is that two of our models agree on the fact that there is a large amount of congestion in the Southern area of Mississippi. Congestion in this area is not ideal, and in fact dangerous, since it is the area most likely to be flooded by hurricanes. This congestion seems to be caused by a lack of highway coverage in the Southwestern part of Mississippi, especially between Stone, Perry, Greene and George counties. In fact, adding a Four-Lane Highway between George and Perry Counties moves the bottleneck of traffic flow to a considerably safer area up North. Our strongest recommendation to the State of Mississippi, as  a preventative measure, is to consider such a highway.\\
+
+\par Finally, we can conclude on the strategy to use, depending on the situation. The Heuristic Model is a model where all citizens decide where they are going on their own, and in which county officials do not need to intervene. As such, this model leads to the highest evacuation speeds, at the cost of having a place for the citizens to take refuge. Therefore this strategy should only be used in the most urgent scenario, where everyone absolutely must leave the affected counties as quickly as possible. On the other hand, if the State has had more time to prepare and has forecasted the arrival of the hurricane early enough, then they can tell the citizens to stay in-state, make accommodations for them, and give them very specific routes according to either the Markov Model or the Maxflow Model. This is a more heavy-handed strategy and would invariably involve a lot of intervention from the county officials in order to properly organize the evacuations.
 
 
 \section{Future Work}
@@ -297,10 +300,10 @@ Overall, all of these would be achievable with the state of our models, but woul
 \section{Individual Contributions}
 \label{sec:contributions}
 \subsection*{Ryan}
-Performed the data-fetching of the hurricanes. Wrote all of the most of the manuscript with Paul. Worked out some of the logic for both the flow and the markov model.
+Performed the data-fetching of the hurricanes. Wrote all of the most of the manuscript with Paul. Worked out some of the logic for both the flow and the Markov model.
 
 \subsection*{Paul}
-Designed and implemented the stochastic model. Helped Ryan write most of the manuscript. Parsed the county data such as county location and population using the WolframAlpha API. 
+Designed and implemented the stochastic model. Helped Ryan write most of the manuscript. Parsed the county data such as county location and population using the WolframAlpha API. Created the Mississippi Highway map used in all the models.
 
 \subsection*{Antoine}
 Implemented the flow and Markov models. Created almost all of the graph and network visualizations. Worked on the two first models' analyses for the manuscript.
