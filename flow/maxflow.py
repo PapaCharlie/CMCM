@@ -33,7 +33,7 @@ if __name__ == "__main__":
         cap[edge] = e[2]
         edge_cap_text[edge] = str(e[2])
 
-    bottom_states = [23, 24, 30, 46, 74, 57, 3, 79]
+    bottom_states = [23, 24, 30, 46, 74, 57, 3, 79, 55]
     top_states = [17, 47, 5, 70, 2, 71, 14, 72]
     for i in bottom_states:
         e = g.add_edge(0, i)
