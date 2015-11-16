@@ -9,6 +9,12 @@ class LonLat:
         self.lon = lon
         self.lat = lat
 
+    def __str__(self):
+        return "(%0.5F,%0.5F)"%(self.lon,self.lat)
+
+    def __repr__(self):
+        return "LonLat(%0.5F,%0.5F)"%(self.lon,self.lat)
+
     def away_from_hurricane(self, current_position, hurricane_pos):
         v1 = [current_position.lon - hurricane_pos.lon, current_position.lat - hurricane_pos.lat]
         v2 = [self.lon - current_position.lon, self.lat - current_position.lat]
@@ -17,16 +23,21 @@ class LonLat:
 class County:
     def __init__(self, id):
         self.id = id
+        self.out_of_state = id > 82
 
-    def get_neighbors(self):
-        return neighbor_map[self.id]
+    def __str__(self): return "County(%s|%d)"%(self.get_county_name(), self.id)
+
+    def __repr__(self): return "County(%s|%d)"%(self.get_county_name(), self.id)
+
+    def get_location(self): return locations[self.id]
+
+    def get_county_name(self): return filter(lambda k: county_map[k] == self.id, county_map)[0]
+
+    def get_neighbors(self): return neighbor_map[self.id]
 
     def viable_neighbors(self, hurricane_loc):
         neighbors = self.get_neighbors()
         return filter(lambda id: locations[id].away_from_hurricane(locations[self.id], hurricane_loc), neighbors)
-
-    def get_county_name(self):
-        return filter(lambda k: county_map[k] == self.id, county_map)[0]
 
     def decrease_pop(self):
         populations[self.id] -= pphpr
@@ -64,9 +75,9 @@ def average_huricane_counties(hurricane_counties):
 def load_highways():
     global county_map
     global highways
-    out_of_states = [('OOS1',82),('OOS2',83),('OOS3',84),('OOS4',85),('OOS5',86),('OOS6',87)]
+    out_of_state = [('OOS1',82),('OOS2',83),('OOS3',84),('OOS4',85),('OOS5',86),('OOS6',87)]
     with open('../mississippi_county.list') as f:
-        county_map = dict(map(lambda (x,y): (y.strip(),x), enumerate(f.readlines())) + out_of_states)
+        county_map = dict(map(lambda (x,y): (y.strip(),x), enumerate(f.readlines())) + out_of_state)
     with open('../mississippi_graph.csv') as graph:
         next(graph)
         for line in graph:
@@ -75,12 +86,21 @@ def load_highways():
 
 def load_locations():
     global locations
-    out_of_states_locations = {'OOS1': (1,1), 'OOS2': (1,1), 'OOS3': (1,1), 'OOS4': (1,1), 'OOS5': (1,1), 'OOS6': (1,1)}
-    locs = dict(load_location_dict().items() + out_of_states_locations.items())
-    locations = dict(map(lambda c: (county_map[c], LonLat(locs[c][0],-locs[c][1])), locs))
+    out_of_state_locations = {
+        'OOS1': (35.362031, -89.121045),
+        'OOS2': (34.433951, -91.230420),
+        'OOS3': (32.240532, -91.669873),
+        'OOS4': (30.703905, -90.626172),
+        'OOS5': (31.886736, -87.989453),
+        'OOS6': (33.769867, -87.890576)
+    }
+    locs = dict(load_location_dict().items() + out_of_state_locations.items())
+    locations = dict(map(lambda c: (county_map[c], LonLat(locs[c][0],locs[c][1])), locs))
 
 def load_populations():
     global populations
+    out_of_state_populations = {'OOS1': 0,'OOS2': 0,'OOS3': 0,'OOS4': 0,'OOS5': 0,'OOS6': 0}
+    populations = dict(map(lambda c: (county_map[c], out_of_state_populations[c]), out_of_state_populations))
     with open('../mississippi_county_pop.csv') as pops:
         next(pops)
         for line in pops:

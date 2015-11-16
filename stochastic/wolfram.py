@@ -19,8 +19,8 @@ def load_location_dict():
 
 def parse_url(google_maps):
     coords = google_maps[google_maps.find("amp;q=")+len("amp;q="):].replace('%20','').replace('%2C',',').replace('N','').replace('W','').replace('S','').replace('E','')
-    north, west = map(lambda f:abs(float(f)), coords.split(','))
-    return north, west
+    north, east = map(lambda f:abs(float(f)), coords.split(','))
+    return north, -east
 
 def get_county_location(county):
     from urllib2 import urlopen
