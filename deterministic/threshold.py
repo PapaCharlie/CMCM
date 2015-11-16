@@ -8,7 +8,9 @@ from geopy.distance import vincenty
 
 def threshold(dist, rad, cat):
     if dist/rad > 3:
-        return 10000
+        return 1000000
+    if cat == 1:
+        return 0.5
     th = 0.1 * 2**(dist/rad) / cat
     return th
 
@@ -30,6 +32,8 @@ if __name__ == "__main__":
     cat = int(sys.argv[4])
 
     thresholds = compute_thresholds(clat, clong, rad, cat)
-    s = utils.to_matlab(thresholds)
+    s = utils.to_matlab(thresholds, '')
+    s = s.replace('\n', '')
+    s = s[:-1]
     print s
 

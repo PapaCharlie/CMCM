@@ -1,6 +1,22 @@
 populations % pops
 adjacency % adj
-thresholds % percentage of people we allow in the county
+
+% percentage of people we allow in the county
+% ths = thresholds(31.8,-91.0,43.0,1);
+% ths = thresholds(30.4,-88.8,51.0,1);
+% ths = thresholds(30.3,-88.4,43.0,1);
+% ths = thresholds(30.8,-88.6,56.0,1);
+% ths = thresholds(30.8,-88.5,69.0,2);
+% ths = thresholds(30.1,-89.4,64.0,2);
+% ths = thresholds(30.3,-88.9,69.0,2);
+% ths = thresholds(30.2,-88.6,69.0,2);
+% ths = thresholds(30.4,-88.9,64.0,2);
+% ths = thresholds(30.4,-89.2,73.0,3);
+% ths = thresholds(30.2,-89.6,78.0,3);
+% ths = thresholds(30.2,-88.6,73.0,3);
+% ths = thresholds(30.2,-89.4,73.0,3);
+% ths = thresholds(30.5,-88.9,73.0,3);
+ths = thresholds(30.3,-89.4,117.,5);
 
 for i=1:length(adj)
     adj(:,i) = adj(:,i) * 3000 / pops(i);
@@ -15,7 +31,7 @@ A = getA(adj);
 
 curr_pop = pops;
 interests = [];
-max_t = 96;
+max_t = 24*5;
 for t=1:1:max_t
     curr_pop = A * curr_pop;
     % percentage of people still in counties

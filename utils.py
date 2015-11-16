@@ -37,7 +37,11 @@ def get_edges(filename, names):
         return pairs
 
 def to_matlab(mat, mname = 'm'):
-    s = mname + ' = ['
+    if mname == '':
+        s = '['
+    else:
+        s = mname + ' = ['
+
     for row in mat:
         s += str(row) + ';\n'
 
