@@ -73,13 +73,18 @@
   \includegraphics[width=.5\textwidth]{figures/county_map.jpg}
   \caption{A Map of Counties in the State of Mississippi \cite{county_map}}
   \end{figure}
-  As a result of this, we assume that each county can be modeled as a single node in an undirected graph. Here an edge from node $i$ to node $j$ represents that a refugee can directly reach county $j$ from county $i$. Therefore, we constructed our network of Mississippi counties by connecting a county's node to the nodes of all bordering counties. This produced the following graph:
+  As a result of this, we assume that each county can be modeled as a single node in an undirected graph. Then an edge from node $i$ to node $j$ represents that a refugee can directly reach county $j$ from county $i$. Therefore, we constructed a network of Mississippi counties by connecting each county's node to the nodes of all bordering counties. This produced the following graph:
   \begin{figure}[H]
   \centering
-  \includegraphics[width=.5\textwidth]{figures/full_undirected.pdf}
+  \includegraphics[width=.5\textwidth]{figures/full_undirected-crop.pdf}
   \caption{Undirected Graph Representing Mississippi Counties}
   \end{figure}
-
+  Because Mississippi has varying highway structure, it would be inappropriate to assume uniform travel rates between county pairs. In order to capture this homogeneity in the network model, we decided to assign a weight to each edge. A single edge weight then represents a carrying capacity for the amount of travel possible between two counties. As a real world analogy, we assumed that this would correspond to the number of highway lanes traveling from one county to another. Therefore, we were able to assign edge weights across this graph by using the following highway map:
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=.75\textwidth]{ms_highways.pdf}
+  \caption{Map of Major Highways in the State of Mississippi \cite{ms_highways}}
+  \end{figure}
 
 
 
@@ -134,10 +139,10 @@
   \begin{thebibliography}{9}
     \bibitem{county_map}
       \url{http://www.madeinmississippi.us/wp-content/uploads/2015/02/mississippi-county-map.jpg}
+
     \bibitem{pmc}
       \url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4060166/}
-    \bibitem{ms_highways}
-      \url{https://www.mississippi.org/assets/docs/library/ms_highways.pdf}
+    
   \end{thebibliography}
 
 \end{document}
