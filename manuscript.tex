@@ -112,13 +112,13 @@
 \label{sec:markov}
   Because our analysis of historical hurricane trends concluded that the vast majority of landfalls occur in the three southern-most counties, the first evacuation strategy we tested was one where all evacuees move strictly northward.
   \subsection{Model Description}
-    Given that we have a network structure and associated population flow rates, this problem lends itself well to a Markov process analysis. We can model our evacuation strategy by converting the network of Mississippi counties into a directed graph. For our northward evacuation, this means only drawing highway edges to destination nodes with higher latitudes:
+    Given that we have a network structure and associated population flow rates, this problem lends itself well to a Markov process analysis. We can model our evacuation strategy by converting the network of Mississippi counties into a directed graph. For our northward evacuation, this means only drawing highway-based edges to destination nodes with higher latitudes:
     \begin{figure}[H]
       \centering
-      \includegraphics[width=.5\textwidth]{full_directed_ns.pdf}
-      \caption{Map of Major Highways in the State of Mississippi \cite{ms_highways}}
+      \includegraphics[width=.5\textwidth]{figures/full_directed_ns.pdf}
+      \caption{Map of Northbound Highway Routes in the State of Mississippi \cite{ms_highways}}
     \end{figure}
-    Then each edge transition probability in this graph determines the proportion of a county's population that travels to a destination node during a single update. We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
+    The thickness of each arrow in this graph represents the transition probability from one node to another. Then each edge transition probability in this graph determines the proportion of a county's population that travels to a destination node during a single update. We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
 
   \subsection{Parameter Values and Justification}
   \subsection{Results}
