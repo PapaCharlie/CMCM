@@ -60,7 +60,7 @@
 
 \section{Executive Summary}
 \label{sec:summary}
-\\
+\vspace{1cm}
 Governor Bryant,\\
 
 At the request of the Mississippi Emergency Management Administration, we have conducted a thorough mathematical analysis of hurricane evacuation strategies for all 82 counties in the state of Mississippi. These strategies were tested across a range of possible hurricane conditions backed by historical weather data. By testing across this range of possibilities, we found that it is best to follow one of two different strategies depending on the type of storm being faced.\\
@@ -119,8 +119,47 @@ Paul Chesnais, Antoine Pourchet, and Ryan Vogan
 
 \section{Historical Hurricane Trends}
 \label{sec:hurricanes}
-  \par
-    Northwest
+  Before designing potential evacuation strategies, we first sought to understand the expected speed, size, and landfall of a hurricane impacting Mississippi. Discovering patterns in these storms proved very difficult, because the Earth's atmosphere is a chaotic system. Other than the general pattern that hurricanes in the Gulf of Mexico tend to curl back toward the north-east, there is very little we can predict about a hurricane's trajectory:
+   \begin{figure}[H]
+    \centering
+      \includegraphics[width=.5\textwidth]{figures/chaos.jpg}
+      \caption{Map of Atlantic Hurricane Trajectories \cite{chaos}}
+    \end{figure}
+  As a result of this, we decided to test our evacuation plans against hurricanes that actually occurred in the past. This ensures that our model parameters governing the hurricane are as accurate as possible. In order to do this, we parsed a NOAA dataset containing every cyclone (tropical storm, hurricane, etc.) occurring from 1851 to 2014. For each hurricane in this dataset, we found the first latitude and longitude datapoint over Mississippi and recorded that as a landfall position (throwing out hurricanes that never passed over Mississippi). You can see these points in the figures below, where the left is a web-app display of hurricane trajectories over Mississippi, while the right is the 15 discovered landfalls we pulled from the NOAA dataset:
+    \begin{figure}[H]
+      \center
+      \begin{subfigure}[b]{0.5\textwidth}
+        \center
+        \includegraphics[width=\linewidth]{figures/smaller_chaos.png}
+        \caption*{Map of Mississippi Hurricane Trajectories \cite{smaller_chaos}}
+      \end{subfigure}~
+      \begin{subfigure}[b]{0.5\textwidth}
+        \center
+        \includegraphics[width=\linewidth]{figures/parsed_chaos.png}
+        \caption*{Landfall Locations Parsed From Hurricane Dataset \cite{fifteen}}
+      \end{subfigure}
+    \end{figure}
+    \newpage
+  Each point in this dataset had an associated wind speed that we used to classify it's category \cite{categories}:
+  \begin{itemize}
+    \item[]
+      \textbf{Category 1:} 74-95 mph
+    \item[]
+      \textbf{Category 2:} 96-110 mph
+    \item[]
+      \textbf{Category 3:} 111-129 mph
+    \item[]
+      \textbf{Category 4:} 130-156 mph
+    \item[]
+      \textbf{Category 5:} 157 mph or higher
+  \end{itemize}
+  The last piece of data we needed for these hurricanes were their radii. Since hurricane radii records don't exist for years earlier than 2004, we used a least squares linear fit to interpolate the radius for a given hurricane wind speed:
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/least_fit.png}
+    \caption{Hurricane Radius (nmi) vs Wind Speed (kt)}
+    \label{fig:highway_map}
+  \end{figure}
 
 
 \section{Markov Process Analysis of Strictly Northern Evacuations}
@@ -275,7 +314,7 @@ Paul Chesnais, Antoine Pourchet, and Ryan Vogan
   \subsection{Results}
     \par This model's main goal is to find the amount of time it takes to evacuate the affected counties, given the estimated floods. After 100 simulations with the parameters described above, we find that it consistently takes less than 50 hours to evacuate all the at-risk counties. Figures \ref{fig:stochastic_out_large} and \ref{fig:stochastic_out_small} depict the evolution of the county populations when the impending hurricane is of category 5 and 1 respectively. The hurricane in Figure~\ref{fig:stochastic_out_large} is coming from the West, and a such, the population of Jackson County initially peaks as everyone moves east and directly away from the hurricane's projected landfall, then decreases as citizens start then making their way north and out of the state. In Figure~\ref{fig:stochastic_out_small}, the hurricane comes directly from the South. There is a slight flaw in the graph in that Harrison County is represented to be lower than Jackson County, and the connectivity between the two is quite high. As such, people from Harrison County will seek refuge in Jackson County before moving North.
     \par There was also a large congestion observed in Greene County. It would seem that on their way North, citizens have trouble exiting this county. The model described in \nameref{sec:maxflow} concluded that adding highways in this area of Mississippi would drastically improve the flow of citizens. This heuristic model reflects that this is a high congestion area and supports the idea that adding roads there would increase citizen flow.
-    \begin{figure}
+    \begin{figure}[H]
       \center
       \begin{subfigure}[b]{0.5\textwidth}
         \center
@@ -327,6 +366,16 @@ Implemented the flow and Markov models. Created almost all of the graph and netw
       \url{http://www.madeinmississippi.us/wp-content/uploads/2015/02/mississippi-county-map.jpg}
     \bibitem{ms_highways}
       \url{https://www.mississippi.org/assets/docs/library/ms_highways.pdf}
+    \bibitem{chaos}
+      \url{http://www.mapcruzin.com/images/hurricane-shapefile-400x255.png}
+    \bibitem{smaller_chaos}
+      \url{https://coast.noaa.gov/hurricanes/}
+    \bibitem{fifteen}
+      \url{http://www.aoml.noaa.gov/hrd/hurdat/Data_Storm.html}
+    \bibitem{categories}
+      \url{http://www.nhc.noaa.gov/aboutsshws.php}
+
+
     \bibitem{pmc}
       \url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4060166/}
     \bibitem{5news}
