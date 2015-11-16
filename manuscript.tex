@@ -116,9 +116,41 @@
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}
 \label{sec:maxflow}
   \subsection{Model Description}
+    \par In this model, we will approach as a network flow problem. The nodes of this graph will be the counties, and the edges are the roads connecting them together. Since we also have a quantifiable way to compare roads based on their potential throughput, we can label those as the capacities of the edges. 
+    In order to get an idea of how many people can evacuate in a northbound manner, we can compute the maximum flow of the network. The location of the dividing line between the two partitions will also tell us the areas sof congestions, which will lead us to interesting plans.
   \subsection{Parameter Values and Justification}
+    \par Now, in order to be able to compute the flow through the graph, we have to make it directed, and come up with a general rule for which directions we want to consider. After a lot of research, we saw that more often than not, going northbound was the best reaction to most hurricanes in Mississippi (because most of the hurricanes made landfall on the south coast). 
+    We also add two nodes to that graph that will act as the source and the sink (which are necessary for computing the maximum flow through the graph).
+    \par It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
   \subsection{Results}
+  \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure~\ref{fig:oldmaxflow}.
+  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster). 
+  Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road. Figure~\ref{fig:newmaxflow}
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{0.5\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/old_maxflow-crop.pdf}
+        \caption{Maximum Flow Partitions}
+        \label{fig:oldmaxflow}
+      \end{subfigure}~
+      \begin{subfigure}[b]{0.5\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/maxflow_directed-crop.pdf}
+        \caption{Maximum Flow Partitions}
+        \label{fig:newmaxflow}
+      \end{subfigure}
+      \caption{}
+    \end{figure}
+    With this information, we can safely say that a great emergency evacuation plan could be prepared years in advance by creating new routes that link counties together. With the addition of a single two lane highway, we drastically increased the potential rate of evacuation of the southern counties. However, we can also use the maximum flow to determine how long in advance we need to order the evacuation.
+    The total population of the evacuated counties is 616338. So let us compute the theoretical lower bound for how long it would take to evacuate those states fully:
+    \begin{align*}
+        t^* &= \frac{\text{total population}}{\text{max flow}}\\
+        t^* &= \frac{616338}{27000}\\
+        t^* &= 10 \text{hrs}
+    \end{align*}
   \subsection{Strengths and Weaknesses}
+    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation. 
 
 \section{Stochastic Model of Landfall-Avodiant Evacuations}
 \label{sec:stochastic}
@@ -163,6 +195,8 @@
       \url{http://5newsonline.com/2012/08/27/garretts-blog-hurricanes-in-arkansas/}
     \bibitem{famsize}
       \url{http://www.statista.com/statistics/183657/average-size-of-a-family-in-the-us/}
+    \bibitem{graphtool}
+      \url{http://graph-tool.skewed.de/}
     \bibitem{census}
       \url{http://census.ire.org/data/bulkdata.html}
   \end{thebibliography}
