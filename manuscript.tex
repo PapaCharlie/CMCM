@@ -127,15 +127,15 @@
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}
 \label{sec:maxflow}
   \subsection{Model Description}
-    \par In this model, we will approach as a network flow problem. The nodes of this graph will be the counties, and the edges are the roads connecting them together. Since we also have a quantifiable way to compare roads based on their potential throughput, we can label those as the capacities of the edges. 
+    \par In this model, we will approach as a network flow problem. The nodes of this graph will be the counties, and the edges are the roads connecting them together. Since we also have a quantifiable way to compare roads based on their potential throughput, we can label those as the capacities of the edges.
     In order to get an idea of how many people can evacuate in a northbound manner, we can compute the maximum flow of the network. The location of the dividing line between the two partitions will also tell us the areas sof congestions, which will lead us to interesting plans.
   \subsection{Parameter Values and Justification}
-    \par Now, in order to be able to compute the flow through the graph, we have to make it directed, and come up with a general rule for which directions we want to consider. After a lot of research, we saw that more often than not, going northbound was the best reaction to most hurricanes in Mississippi (because most of the hurricanes made landfall on the south coast). 
+    \par Now, in order to be able to compute the flow through the graph, we have to make it directed, and come up with a general rule for which directions we want to consider. After a lot of research, we saw that more often than not, going northbound was the best reaction to most hurricanes in Mississippi (because most of the hurricanes made landfall on the south coast).
     We also add two nodes to that graph that will act as the source and the sink (which are necessary for computing the maximum flow through the graph).
     \par It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
   \subsection{Results}
   \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure~\ref{fig:oldmaxflow}.
-  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster). 
+  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster).
   Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road. Figure~\ref{fig:newmaxflow}
     \begin{figure}
       \center
@@ -161,7 +161,7 @@
         t^* &= 10 \text{hrs}
     \end{align*}
   \subsection{Strengths and Weaknesses}
-    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation. 
+    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation.
 
 \section{Stochastic Model of Landfall-Avodiant Evacuations}
 \label{sec:stochastic}
@@ -211,5 +211,27 @@
     \bibitem{census}
       \url{http://census.ire.org/data/bulkdata.html}
   \end{thebibliography}
+
+\lstinputlisting[style=Matlab]{deterministic/certainties.m}
+\lstinputlisting[style=Matlab]{deterministic/constantrate.m}
+\lstinputlisting[style=Matlab]{deterministic/getA.m}
+\lstinputlisting[style=Matlab]{deterministic/populations.m}
+\lstinputlisting[style=Matlab]{deterministic/thresholds.m}
+\lstinputlisting[style=Matlab]{hurricane_generator/interpolate_radius.m}
+\lstinputlisting[style=Python]{deterministic/threshold.py}
+\lstinputlisting[style=Python]{get_pop.py}
+\lstinputlisting[style=Python]{stochastic/data.py}
+\lstinputlisting[style=Python]{stochastic/simulation.py}
+\lstinputlisting[style=Python]{stochastic/wolfram.py}
+\lstinputlisting[style=Python]{get_adjacency.py}
+\lstinputlisting[style=Python]{utils.py}
+\lstinputlisting[style=Python]{hurricane_generator/clean.py}
+\lstinputlisting[style=Python]{hurricane_generator/get_radii.py}
+\lstinputlisting[style=Python]{hurricane_generator/geotag.py}
+\lstinputlisting[style=Python]{hurricane_generator/final.py}
+\lstinputlisting[style=Python]{flow/colornodes.py}
+\lstinputlisting[style=Python]{flow/maxflow.py}
+\lstinputlisting[style=Python]{flow/create_graph.py}
+\lstinputlisting[style=Python]{flow/threshold_from_hurricane.py}
 
 \end{document}
