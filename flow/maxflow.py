@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     graph_draw(g, pos=pos, edge_pen_width=prop_to_size(cap, mi=1, ma=10, power=1),
             vertex_fill_color=color, vertex_text=g.vertex_index,
-            vertex_font_size=15, output="dope_tities.pdf",
+            vertex_font_size=15, output="maxflow_directed.pdf",
             fit_view=True, output_size=(800, 1200))
 
     print mc
