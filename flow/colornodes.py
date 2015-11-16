@@ -12,10 +12,9 @@ if __name__ == "__main__":
 
     names = utils.get_name_map("../mississippi_county.list")
     edges = utils.get_edges("../mississippi_graph_NS.csv", names)
-    edges += utils.get_edges("../mississippi_graph_EW.csv", names)
 
     g = Graph()
-    g.set_directed(False)
+    g.set_directed(True)
     vertices = g.add_vertex(len(names))
     cap = g.new_edge_property("double")
     pos = g.new_vertex_property("vector<double>")
@@ -30,6 +29,6 @@ if __name__ == "__main__":
 
     graph_draw(g, pos=pos, edge_pen_width=prop_to_size(cap, mi=1, ma=10, power=1),
             vertex_text=g.vertex_index,
-            vertex_font_size=15, output="full_undirected.pdf",
+            vertex_font_size=15, output="just_tities.pdf",
             fit_view=True, output_size=(800, 1200))
 
