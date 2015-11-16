@@ -86,10 +86,10 @@
   \par
      Because Mississippi has varying highway structure, it would be inappropriate to assume uniform travel rates between county pairs. In order to capture this heterogeneity in the network model, we decided to assign weights to every edge. Then a single edge weight represents a carrying capacity for the amount of travel possible between two counties. For a real-world mapping, we assume that this would correspond to the total number of highway lanes spanning two counties. Therefore, we were able to assign edge weights across the entire graph by using the following highway map:
   \begin{figure}[H]
-  \centering
-  \includegraphics[width=.5\textwidth]{ms_highways.pdf}
-  \caption{Map of Major Highways in the State of Mississippi \cite{ms_highways}}
-  \label{fig:highway_map}
+    \centering
+    \includegraphics[width=.5\textwidth]{ms_highways.pdf}
+    \caption{Map of Major Highways in the State of Mississippi \cite{ms_highways}}
+    \label{fig:highway_map}
   \end{figure}
   \par
     In this figure, the thick black lines represent four lane highways while the red lines represent two lane highways. We assume that despite the ensuing panic, evacuees still travel along the right side of the highway, even if this means lanes going the other way (towards the hurricane) are underutilized. Therefore, for every thick black line spanning two counties, the appropriate edge in the graph gains two additional lanes, whereas red lines add one lane. Summing the lane contributions of all highways for a pair of counties therefore gives us an single edge weight in the graph.
@@ -99,16 +99,27 @@
     \[
       \frac{10\ \text{km/hr}}{10\ \text{m/car}} = 1000\ \text{cars/hr}
     \]
+  \par
     We assume that evacuees travel with friends and family in their cars. Because the average size of an American family is \texttildelow 3 persons \cite{famsize}, we conclude that 3000 people per hour can use a single lane to another county. Maximum population flow rates between each county are therefore three thousand times the corresponding edge weight.
 
 \section{Historical Hurricane Trends}
 \label{sec:hurricanes}
-  Go northwest
+  \par
+    Northwest
 
 
 \section{Markov Process Analysis of Strictly Northern Evacuations}
 \label{sec:markov}
+  Because our analysis of historical hurricane trends concluded that the vast majority of landfalls occur in the three southern-most counties, the first evacuation strategy we tested was one where all evacuees move strictly northward.
   \subsection{Model Description}
+    Given that we have a network structure and associated population flow rates, this problem lends itself well to a Markov process analysis. We can model our evacuation strategy by converting the network of Mississippi counties into a directed graph. For our northward evacuation, this means only drawing highway edges to destination nodes with higher latitudes:
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=.5\textwidth]{full_directed_ns.pdf}
+      \caption{Map of Major Highways in the State of Mississippi \cite{ms_highways}}
+    \end{figure}
+    Then each edge transition probability in this graph determines the proportion of a county's population that travels to a destination node during a single update. We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
+
   \subsection{Parameter Values and Justification}
   \subsection{Results}
   \subsection{Strengths and Weaknesses}
