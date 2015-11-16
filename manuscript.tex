@@ -70,9 +70,10 @@
   The MSEMA specified that our plan should be enacted on a per-county basis. As you can see in the following figure, these counties are approximately equally sized:
   \begin{figure}[H]
   \centering
-  \includegraphics[text=.5\textwidth]{imgs/county_map.png}
-  \caption{A map of counties in Mississippi\cite{county_map}}
+  \includegraphics[width=.5\textwidth]{figures/county_map.jpg}
+  \caption{A Map of Counties in the State of Mississippi \cite{county_map}}
   \end{figure}
+  As a result of this, we assume that each county can be modeled as a single node in a bidirected graph. Here an edge from node $i$ to node $j$ represents that a refugee can directly reach county $j$ from county $i$. Therefore, we constructed our network of Mississippi counties by connecting a county's node to the nodes of all bordering counties. This produced the following graph:
 
 
   
