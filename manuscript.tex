@@ -48,10 +48,10 @@
 
 \lstdefinestyle{Matlab}{
   backgroundcolor=\color{Background},basicstyle=\ttfamily\small\setstretch{1},breaklines=true,
-  commentstyle=\color{mygreen},emph=[1]{for,end,break},emphstyle=[1]\color{red},frame=l,identifierstyle=\color{black},
-  keywordstyle=[2]{\color{black}},keywordstyle=\color{blue},language=Matlab,literate={~} {\texttildelow}{1},
-  morekeywords=[2]{1},morekeywords={matlab2tikz},numbers=left,numbersep=9pt,numberstyle={\tiny \color{black}},
-  showstringspaces=false,stringstyle=\color{mylilas},
+  commentstyle=\color{mygreen}\slshape,emph=[1]{for,end,break},emphstyle=[1]\color{red},frame=l,identifierstyle=\color{black},
+  keywordstyle=[2]{\color{black}},keywordstyle={\color{blue}\bfseries},language=Matlab,literate={~} {\texttildelow}{1},
+  morekeywords=[2]{1},morekeywords={matlab2tikz},numbers=left,numbersep=1em,numberstyle=\footnotesize,
+  showstringspaces=false,stringstyle=\color{mylilas},xleftmargin=1em,
 }
 
 \begin{document}
@@ -121,7 +121,7 @@
     The thickness of each arrow in this graph represents the transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to a destination node during a single update. In order We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
 
   \subsection{Parameter Values and Justification}
-    Using our earlier values for the maximum flow rate of an edge, we can now use this 
+    Using our earlier values for the maximum flow rate of an edge, we can now use this
   \subsection{Results}
   \subsection{Strengths and Weaknesses}
 
@@ -136,7 +136,7 @@
     \par It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
   \subsection{Results}
   \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure~\ref{fig:oldmaxflow}.
-  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster). 
+  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster).
   Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road. Figure~\ref{fig:newmaxflow}
     \begin{figure}
       \center
@@ -164,7 +164,7 @@
     So according to this model, if we decided to evacuate everyone in the southern counties all at once, it would take upwards of a day to get everyone to safe counties.
   \subsection{Strengths and Weaknesses}
     % TODO
-    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation. 
+    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation.
 
 \section{Stochastic Model of Landfall-Avodiant Evacuations}
 \label{sec:stochastic}
