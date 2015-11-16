@@ -125,7 +125,39 @@
   \subsection{Parameter Values and Justification}
     Using our earlier values for the maximum flow rate of an edge, we can now use this
   \subsection{Results}
+    % TODO
+      Figure~\ref{fig:pop_deter} shows the evolution of the populations of some example states during an evacuation. The Y-Axis shows the percentage of the original population is contained in that state, and the X-Axis is the number of hours that has elapsed since the evacuation order.
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/pop_county_29-crop.pdf}
+        \caption{Population of Jackson}
+        \label{fig:pop_county60}
+      \end{subfigure}~
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/pop_county_39-crop.pdf}
+        \caption{Population of Leake}
+        \label{fig:pop_county39}
+      \end{subfigure}~
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/pop_county_60-crop.pdf}
+        \caption{Population of Rankin}
+        \label{fig:pop_county60}
+      \end{subfigure}
+      \caption{Evolution of populations during evacuation}
+      \label{fig:pop_deter}
+    \end{figure}
+    % TODO
+    % We tested against all 15 hurricanes
+    % For 14 of the 15 hurricanes, we managed to have the time to evacuation under 80 minutes.
+    % One hurricane (category 5) made the evacuation take longer than 100 days --> order evacuation imediately as soon as we see a cat 5
+
   \subsection{Strengths and Weaknesses}
+    % We can get an estimate of how long we need to evacuate based on the specs of the hurricane
+    % Its not a one-size-fits all which is good and bad
     By aggregating population in the northernmost counties, this model as a limiting assumption that evacuees never leave Mississippi.
 
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}

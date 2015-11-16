@@ -27,4 +27,4 @@ for t=0:1:max_t
 end
 
 figure
-plot(interest(:,40))
+plot(interest(:,30))
