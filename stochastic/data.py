@@ -18,16 +18,16 @@ class LonLat:
     def away_from_hurricane(self, current_position, hurricane_pos):
         v1 = [current_position.lon - hurricane_pos.lon, current_position.lat - hurricane_pos.lat]
         v2 = [self.lon - current_position.lon, self.lat - current_position.lat]
-        return abs(degrees(arccos(vdot(v1,v2)/(norm(v1)*norm(v2))))) < 90
+        return (abs(degrees(arccos(vdot(v1,v2)/(norm(v1)*norm(v2))))) < 90) #and (self.lat >= current_position.lat or self.lon >= current_position.lon)
 
 class County:
     def __init__(self, id):
         self.id = id
         self.out_of_state = id > 82
 
-    def __str__(self): return "County(%s|%d)"%(self.get_county_name(), self.id)
+    def __str__(self): return "County(%s|%d|%d)"%(self.get_county_name(),self.id, self.get_population())
 
-    def __repr__(self): return "County(%s|%d)"%(self.get_county_name(), self.id)
+    def __repr__(self): return "County(%s|%d|%d)"%(self.get_county_name(),self.id, self.get_population())
 
     def get_location(self): return locations[self.id]
 
@@ -35,25 +35,33 @@ class County:
 
     def get_neighbors(self): return neighbor_map[self.id]
 
+    def get_population(self): return populations[self.id]
+
     def viable_neighbors(self, hurricane_loc):
         neighbors = self.get_neighbors()
-        return filter(lambda id: locations[id].away_from_hurricane(locations[self.id], hurricane_loc), neighbors)
+        return filter(lambda id: locations[id].away_from_hurricane(locations[self.id], hurricane_loc) or locations[id].lat > self.get_location().lat, neighbors)
 
-    def decrease_pop(self):
-        populations[self.id] -= pphpr
-
-    def increase_pop(self):
-        populations[self.id] += pphpr
+    def move_pop(self, neighbor):
+        diff = min(pphpr, populations[self.id])
+        populations[self.id] -= diff
+        populations[neighbor] += diff
 
     def escape(self, hurricane_loc, highway_quotas):
-        neighbors = self.viable_neighbors(hurricane_loc)
-        quotas = map(lambda id: (id, highway_quotas[ordered_tuple(self.id, id)]), neighbors)
-        print quotas
-        best_route = max(quotas, key = lambda (id, quota): quota)
-        if best_route[1] > 0:
-            highway_quotas[ordered_tuple(best_route[0], self.id)] -= 1
-            self.decrease_pop()
-            County(best_route[0]).increase_pop()
+        if self.get_population() > 0:
+            neighbors = self.viable_neighbors(hurricane_loc)
+            if len(neighbors) > 0:
+                quotas = map(lambda id: (id, highway_quotas[ordered_tuple(self.id, id)]), neighbors)
+                # best_route = max(quotas, key = lambda (id, quota): County(id).get_location().lat)
+                best_route = max(quotas, key = lambda (id, quota): quota)
+                while highway_quotas[ordered_tuple(best_route[0], self.id)] > 0:
+                    highway_quotas[ordered_tuple(best_route[0], self.id)] -= 1
+                    self.move_pop(best_route[0])
+            else:
+                northmost = max(self.get_neighbors(), key = lambda c: County(c).get_location().lat)
+                while highway_quotas[ordered_tuple(northmost, self.id)] > 0:
+                    highway_quotas[ordered_tuple(northmost, self.id)] -= 1
+                    self.move_pop(northmost)
+
 
 county_map = dict()
 highways = dict()
@@ -78,21 +86,22 @@ def load_highways():
     out_of_state = [('OOS1',82),('OOS2',83),('OOS3',84),('OOS4',85),('OOS5',86),('OOS6',87)]
     with open('../mississippi_county.list') as f:
         county_map = dict(map(lambda (x,y): (y.strip(),x), enumerate(f.readlines())) + out_of_state)
-    with open('../mississippi_graph.csv') as graph:
-        next(graph)
-        for line in graph:
-            c1,c2,cap = line.strip().split(',')
-            highways[ordered_tuple(county_map[c1], county_map[c2])] = int(cap)
+    for line in open('../mississippi_graph_NS.csv'):
+        c1,c2,cap = line.strip().split(',')
+        highways[ordered_tuple(county_map[c1], county_map[c2])] = int(cap)
+    for line in open('../mississippi_graph_EW.csv'):
+        c1,c2,cap = line.strip().split(',')
+        highways[ordered_tuple(county_map[c1], county_map[c2])] = int(cap)
 
 def load_locations():
     global locations
     out_of_state_locations = {
         'OOS1': (35.362031, -89.121045),
-        'OOS2': (34.433951, -91.230420),
-        'OOS3': (32.240532, -91.669873),
+        'OOS2': (34.433951, -180),
+        'OOS3': (32.240532, -180),
         'OOS4': (30.703905, -90.626172),
-        'OOS5': (31.886736, -87.989453),
-        'OOS6': (33.769867, -87.890576)
+        'OOS5': (31.886736, 0),
+        'OOS6': (33.769867, 0)
     }
     locs = dict(load_location_dict().items() + out_of_state_locations.items())
     locations = dict(map(lambda c: (county_map[c], LonLat(locs[c][0],locs[c][1])), locs))
@@ -101,17 +110,14 @@ def load_populations():
     global populations
     out_of_state_populations = {'OOS1': 0,'OOS2': 0,'OOS3': 0,'OOS4': 0,'OOS5': 0,'OOS6': 0}
     populations = dict(map(lambda c: (county_map[c], out_of_state_populations[c]), out_of_state_populations))
-    with open('../mississippi_county_pop.csv') as pops:
-        next(pops)
-        for line in pops:
-            county, pop = line.strip().split(',')
-            populations[county_map[county]] = int(pop)
+    for line in open('../mississippi_county_pop.csv'):
+        county, pop = line.strip().split(',')
+        populations[county_map[county]] = int(pop)
 
 def compute_neighbor_map():
     global neighbor_map
     for id in range(len(locations)):
         keys = map(lambda (x,y): x if x != id else y, filter(lambda (x,y): x == id or y == id, highways))
-        # print map(lambda k: (k, highways[(min(id,k), max(id,k))]), keys)
         neighbor_map[id] = map(lambda k: k, keys)
 
 def load_data():
@@ -123,5 +129,8 @@ def load_data():
 load_data()
 
 if __name__ == '__main__':
-    k = County(county_map['Amite'])
-    print map(lambda c: County(c).get_county_name(), k.viable_neighbors(locations[county_map['Wilkinson']]))
+    from sys import argv
+    if len(argv) >= 2:
+        c = eval(argv[1])
+        print County(c)
+        print County(c).get_population()
