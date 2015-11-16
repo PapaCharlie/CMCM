@@ -112,19 +112,25 @@
 \label{sec:markov}
   Because our analysis of historical hurricane trends concluded that the vast majority of landfalls occur in the three southern-most counties, the first evacuation strategy we tested was one where all evacuees move strictly northward.
   \subsection{Model Description}
-    Given that we have a network structure and associated population flow rates, this problem lends itself well to a Markov process analysis. We can model our evacuation strategy by converting the network of Mississippi counties into a directed graph. For our northward evacuation, this means only drawing highway-based edges toward nodes with higher latitudes:
+    Given that we have a network structure and associated population flow rates, this problem lends itself well to a Markov process analysis. We can then model our evacuation strategy by converting the network of Mississippi counties into a directed graph. For our northward evacuation, this means only drawing highway-directed edges toward nodes with higher latitudes:
     \begin{figure}[H]
       \centering
       \includegraphics[width=.5\textwidth]{figures/full_directed_NS.pdf}
       \caption{Map of Northbound Highway Routes in the State of Mississippi \cite{ms_highways}}
     \end{figure}
-    The thickness of each arrow in this graph represents the magnitue of transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to another county during a single update. The remaining population that does not leave a county during a single time step implicitly loops back into the same node. This fulfills a conservation of mass required for all Markov models, preventing population from slowing leaking out of the system. Note that for the counties along the northern border of Mississippi, this necessitates a strictly looping behavior because there are no further northern counties. This results in a key assumption that the evacuated population aggregates in the northernmost counties over time, where they are considered to be completely safe from the hurricane. \\
+    The thickness of each arrow in this graph represents the magnitue of transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to another county during a single update. The remaining population that does not leave a county during a single time step implicitly loops back into the same node. This fulfills a conservation of probability required for all Markov models, preventing population from slowing leaking out of the system. Note that for the counties along the northern border of Mississippi, this necessitates a strictly looping behavior because there are no further northern counties. This results in a key assumption that the evacuated population aggregates in the northernmost counties over time, where they are considered to be completely safe from the hurricane. \\
     \\
-    A second key assumption is that the transition probabilities of the graph remain fixed over the entire course of the simulation. The real world implications of this are that county populations converge towards 0 rather than allowing for a full evacuation in a finite number of time steps. We consider this assumption to be reasonable because in a real world scenario it becomes increasingly difficult to evacuate straggling population members who have a reduced mobility due to age, poverty, or other factors. \\
+    A second key assumption is that the transition probabilities of the graph remain fixed over the entire course of the simulation. The real world implications of this are that county populations converge toward 0 rather than allowing for a full evacuation in a finite number of time steps. We consider this assumption to be reasonable because in a real world scenario it becomes increasingly difficult to evacuate straggling population members who have a reduced mobility due to age, poverty, and/or other factors. \\
 
+    In order to run this algorithm, we first initialize a vector of county populations and matrix of transition probabilities. While the initial county populations are drawn from census data \cite{census},justifications for the transition probabilities can be found in the next section. We standard the time step for an update to be one hour such that multiplying the transition matrix and the current population vector gives the population distribution at the next hour. We do this until one of two termination criteria are met:
+    \begin{itemize}
+      \item[1.]
+        The hurricane arrives after 96 time steps
+      \item[2.]
+        All population counts are below a predetermined, county-specific threshold
+    \end{itemize}
 
-
-    We standardize the time for an update to be one hour, and track the number of people in every county through the 4 day period before landfall.
+    Once the termination occurs, we evaluate the success of the evacuation in relation to our quotas determined by predicted landfall of a hurricane. This hurricane will be one randomly chosen from those found from historical data. If population thresholds are not met within the full 4 day advance notice period, we suggest that the state be evacuated at first warning. Otherwise, evacuate in advance the number of hours required to meet the desired thresholds.
 
   \subsection{Parameter Values and Justification}
     Using our earlier values for the maximum flow rate of an edge, we can now use this
@@ -193,11 +199,13 @@
 
   \subsection{Strengths and Weaknesses}
     By aggregating population in the northernmost counties, this model has a limiting assumption that evacuees never leave Mississippi.
-    In ensuring that every highway fulfills its maximum theoretical utilization, this model assumes that evacuations are disorderly and don't follow any government mandated routes. Every citizen is told to simply flee, and they find the path of least resistance. This makes this model a good baseline for comparing more though fully orchestrated plans. 
+    In ensuring that every highway fulfills its maximum theoretical utilization, this model assumes that evacuations are disorderly and don't follow any government mandated routes. Every citizen is told to simply flee, and they find the path of least resistance. This makes this model a good baseline for comparing more though fully orchestrated plans.
     Another strength of this model is that it intelligently decides evacuation priorities based on expected landfall. This allows for a more optimal solution to ensure we don't overreact to low class hurricanes, providing a minimal impact to the normal functioning of these counties.
     % We can get an estimate of how long we need to evacuate based on the specs of the hurricane
     % Its not a one-size-fits all which is good and bad
     By aggregating population in the northernmost counties, this model as a limiting assumption that evacuees never leave Mississippi.
+    Weakness that people flee even if they are aleady in the safe zone.
+    Weak in the 
 
 
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}
@@ -242,31 +250,36 @@
     % Weaknesses
     This model assumes a best case scenario for the utilization of the roads, whereas in reality, people will rarely use the fastest path to a destination. Their behavior will make for a much slower evacuation. We don't really have a way to tell each car what route it should or shouldn't take in order to make the evacuation as speedy as possible, as it would mean sacrificing some drivers for the benefit of others.
 
-\section{Stochastic Model of Landfall-Avodiant Evacuations}
-\label{sec:stochastic}
+\section{Heuristic Model of Landfall-Avodiant Evacuations}
+\label{sec:heuristic}
   \subsection{Model Description}
     \par In this model, instead of giving citizens particular evacuation plan, we give them a simple rule: move directly away from the hurricane landfall if possible, else move North or North-West. Using the statewide broadcast system, the state of Mississippi can tell its citizens where the expected landfall will be, and which counties will be the most affected. In which case, individual citizens are instructed to leave the counties that will be flooded, and to do so as outlined above. This means less coordination from the state, and more options for each citizens. At the cost of not having designated areas, and therefore designated refuge areas for citizens, evacuation is faster because it involves less per-county organization.\\
     \par As opposed to the model described in \nameref{sec:maxflow}, we also allow citizens to leave the state of Mississippi. For example, Arkansas is less likely to be hit by the full force of hurricanes that move through Mississippi \cite{5news}, as such, it is a good place to take refuge while the storm passes. In order to achieve this, we add ``unofficial'' nodes in the graph representation of Mississippi. Figure~\ref{fig:highway_map} shows that Hancock and Jackson Counties have roads that lead into Louisiana and Alabama respectively, both of which are potential routes away from the Hurricane's landfall, meaning that such nodes are important when movement can also be lateral. Because we are only interested in the movement of citizens within Mississippi, we can assume that citizens that reach the out-of-state nodes keep moving further and further away from the hurricane, though we are not tracking them. We created four out-of-state nodes North, South, East and West of Mississippi, each connected in a way that satisfies the highways mapped in Figure~\ref{fig:highway_map}.
   \subsection{Parameter Values and Justification}
-    \par The parameters to this model are the same as the parameters for the models outlined above, except that this model uses the complete highway map of Mississippi, instead of only considering vertical highways. This algorithm expects three inputs outside of the parameters: the first, less accurate estimate of the affected counties, the more accurate second estimate and the final, most accurate estimate. Notice that as described, these inputs actually abstract away the hurricane's category. Instead, the category is reflected by the size of the list of the affected counties given as the respective inputs for the estimates. In order to generate these input, we used the historical hurricane data. Given the landfall and the hurricane's category, we can generate three sets of decreasing size containing neighboring counties. We can then run the simulation on these inputs.
+    \par The parameters to this model are the same as the parameters for the models outlined above, except that this model uses the complete highway map of Mississippi, instead of only considering vertical highways. This algorithm expects three inputs outside of the parameters: the first, less accurate estimate of the affected counties, the more accurate second estimate and the final, most accurate estimate. Notice that as described, these inputs actually abstract away the hurricane's category. Instead, the category is reflected by the size of the list of the affected counties given as the respective inputs for the estimates. In order to generate these input, we used the historical hurricane data. Given the landfall and the hurricane's category, we can generate three sets of decreasing size containing neighboring counties. We can then run the simulation on these inputs. For the first 48 hours, we start to evacuate all the counties listed in the less accurate estimated, then for the second to last day we use the more accurate set of counties to pick which ones to evacuate, and finally the most accurate estimate is used for the last 24 hours.
   \subsection{Results}
-    This model's main goal is to find the amount of time it takes to evacuate the affected states.
+    \par This model's main goal is to find the amount of time it takes to evacuate the affected counties, given the estimated floods. After 100 simulations with the parameters described above, we find that it consistently takes less than 50 hours to evacuate all the at-risk counties. Figures \ref{fig:stochastic_out_large} and \ref{fig:stochastic_out_small} depict the evolution of the county populations when the impending hurricane is of category 1 and 5 respectively. The hurricane in Figure~\ref{fig:stochastic_out_large} is coming from the West, and a such, the population of Jackson County initially peaks as everyone moves east and directly away from the hurricane's projected landfall, then decreases as citizens start then making their way north and out of the state. In Figure~\ref{fig:stochastic_out_small}, the hurricane comes directly from the South. There is a slight flaw in the graph in that Harrison County is represented to be lower than Jackson County, and the connectivity between the two is quite high. As such, people from Harrison County will seek refuge in Jackson County before moving North.
+    \par There was also a large congestion observed in Greene County. It would seem that on their way North, citizens have trouble exiting this county. The model described in \nameref{sec:maxflow} concluded that adding highways in this area of Mississippi would drastically improve the flow of citizens. This heuristic model reflects that this is a high congestion area and supports the idea that adding roads there would increase citizen flow.
     \begin{figure}
       \center
       \begin{subfigure}[b]{0.5\textwidth}
         \center
         \includegraphics[width=\linewidth]{figures/pred_hancock-crop.pdf}
         \caption{Predicted Evacuation for Landfall in Hancock County}
+        \label{fig:stochastic_out_large}
       \end{subfigure}~
       \begin{subfigure}[b]{0.5\textwidth}
         \center
         \includegraphics[width=\linewidth]{figures/pred_jackson-crop.pdf}
         \caption{Predicted Evacuation for Landfall in Jackson County}
+        \label{fig:stochastic_out_small}
       \end{subfigure}
       \caption{}
-      \label{}
+      \label{fig:stochastic_out}
     \end{figure}
   \subsection{Strengths and Weaknesses}
+    \par There are three main weaknesses in this model, two of which are referred to above. The first is that this model assumes that the State of Mississippi does not make accommodations for its citizens in the northern counties, meaning that once the citizens evacuate their home counties, they are left to fend for themselves. But, it does mean that evacuation is very fast, since no county officials need to be involved in organizing the evacuation. There comes a point at which the State must leverage speed of evacuation against citizen accommodations. We can only help in stating that a strategy such as the one outlined in this model will likely yield quicker evacuation times, especially in times of emergency.
+    \par The other weakness is that by representing Mississippi like we have done, we prevent citizens from using smaller backroads to leave the county. This hinders their heuristic to move NorthWest in our simulations. Had we used a more accurate dataset or a more fine grid than just county geographical centers, the simulations would yield faster evacuation times, with everyone immediately going in the right direction.
 
 \section{Conclusions}
 \label{sec:conclusions}
