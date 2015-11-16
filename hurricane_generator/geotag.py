@@ -32,7 +32,7 @@ def geo_tag(lat, lon, delay=1):
 data = pd.read_csv('hurdat2.csv', dtype = str)
 num_rows = data.shape[0]
 
-open('geo_tag_output.csv', 'w').close()
+open('geotag_output.csv', 'w').close()
 
 row = 1461
 while row < num_rows:
