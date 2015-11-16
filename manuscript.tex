@@ -128,6 +128,38 @@
 
   \subsection{Parameter Values and Justification}
     Using our earlier values for the maximum flow rate of an edge, we can now use this
+
+    In order to get the threshold for each county based on the hurricane characteristics, we created a function that would give us the proportion of the original population that did not need to be evacuated. For instance, during a category 1 hurricane, we would find it acceptable to only evacuate 50\% of the original population. Similarily, the proximity of the county in question should factor into that threshold.
+    The formula we ended up using is the following:
+    \begin{align*}
+        threshold(c, h) = 0.1 \cdot 2^{||c-h||_2 / h.radius} \cdot \frac{1}{h.category}
+    \end{align*}
+    In addition to this, if a county is further away than 3 times the radius of the hurricane, that county does not need to be evacuated, and we tag it as a refugee state (it essentially has infinite threshold). Furthermore, category 1 hurricanes have a threshold minimum of 50\% (we do not require more than half of the population of any county to evacuate). 
+    The heatmaps for those thresholds can be observed in Figure~\ref{fig:thresholds}. These were generated from a category 1 hurricane (a) that then grows in size (b) and finally becomes category 5 (c).
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/right_73_1-crop.pdf}
+        \caption{Radius: 73km - Category 1}
+        \label{fig:pop_county60}
+      \end{subfigure}~
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/right_120_1-crop.pdf}
+        \caption{Radius: 120km - Category 1}
+        \label{fig:pop_county39}
+      \end{subfigure}~
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/right_120_5-crop.pdf}
+        \caption{Radius: 120km - Category 5}
+        \label{fig:pop_county60}
+      \end{subfigure}
+      \caption{Thresholds of evacuation for counties of Mississippi}
+      \label{fig:thresholds}
+    \end{figure}
+
   \subsection{Results}
     % TODO
       Figure~\ref{fig:pop_deter} shows the evolution of the populations of some example states during an evacuation. The Y-Axis shows the percentage of the original population is contained in that state, and the X-Axis is the number of hours that has elapsed since the evacuation order.
