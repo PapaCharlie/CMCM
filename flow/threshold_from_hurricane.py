@@ -7,6 +7,7 @@ if __name__ == "__main__":
     clong = float(sys.argv[2])
     rad = float(sys.argv[3])
     cat = int(sys.argv[4])
+    graphname = sys.argv[5]
 
     th = compute_thresholds(clat, clong, rad, cat)
-    create_graph_weights(th)
+    create_graph_weights(th, graphname)
