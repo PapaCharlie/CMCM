@@ -99,7 +99,7 @@ Paul Chesnais, Antoine Pourchet, and Ryan Vogan
     \caption*{}
   \end{figure}
   \par
-     Because Mississippi has varying highway structure, it would be inappropriate to assume uniform travel rates between county pairs. In order to capture this heterogeneity in the network model, we decided to assign weights to every edge. Then a single edge weight represents a carrying capacity for the amount of travel possible between two counties. For a real-world mapping, we assume that this would correspond to the total number of highway lanes spanning two counties. Therefore, we were able to assign edge weights across the entire graph by using the following highway map:
+     Because Mississippi has varying highway structure, it would be inappropriate to assume uniform travel rates between all county pairs. In order to capture this heterogeneity in the network model, we decided to assign weights to every edge. Then a single edge weight represents a carrying capacity for the maximum amount of travel between two counties. For a real-world mapping of this, we assume that this would correspond to the total number of highway lanes spanning two counties. Therefore, we were able to assign edge weights across the entire graph by using the following highway map:
   \begin{figure}[H]
     \centering
     \includegraphics[width=.5\textwidth]{ms_highways.pdf}
