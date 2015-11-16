@@ -9,7 +9,7 @@ def color_from_weight(w):
     color = [1-w, w, 0, 1]
     return color
 
-def create_graph_weights(nodeweights):
+def create_graph_weights(nodeweights, fname):
     positions = pk.load(open("county_locations.dict"))
     positions = sorted(positions.items(), key=lambda (k, v) : k)
     positions = map(lambda (k, v) : (v[1], v[0]), positions)
@@ -38,6 +38,6 @@ def create_graph_weights(nodeweights):
     graph_draw(g, pos=pos, edge_pen_width=prop_to_size(cap, mi=1, ma=10, power=1),
             vertex_fill_color=colors,
             vertex_text=g.vertex_index,
-            vertex_font_size=15, output="colored_graph.pdf",
+            vertex_font_size=15, output=fname,
             fit_view=True, output_size=(800, 1200))
 
