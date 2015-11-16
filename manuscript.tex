@@ -133,16 +133,16 @@
     Once the termination occurs, we evaluate the success of the evacuation in relation to our quotas determined by predicted landfall of a hurricane. This hurricane will be one randomly chosen from those found from historical data. If population thresholds are not met within the full 4 day advance notice period, we suggest that the state be evacuated at first warning. Otherwise, evacuate in advance the number of hours required to meet the desired thresholds.
 
   \subsection{Parameter Values and Justification}
-    Using our earlier values for the maximum flow rate of an edge, we can now use this
-
-    In order to get the threshold for each county based on the hurricane characteristics, we created a function that would give us the proportion of the original population that did not need to be evacuated. For instance, during a category 1 hurricane, we would find it acceptable to only evacuate 50\% of the original population. Similarily, the proximity of the county in question should factor into that threshold.
+    Using our earlier values for the maximum flow rate of an edge, we can now use them to derive transition probabilities for our Markov model. Because the maximum capacity of a road is 3000 times it's weight in the graph, this can be used to give the total population emanating from a county in the first hour of the simulation. If we find the ratios of these values along each edge to the initial population in the county, this gives us a good approximation of the percentage of a county that flees in any given time step. Again we assume these proportions are constant for each edge and ensure conservation of probability through the whole graph. We ensured this conservation of probability by ensuring a constant population throughout the state at every time step.\\
+    \\
+    In order to get the threshold for each county based on the hurricane characteristics, we created a function that would give us the proportion of the original population that did not need to be evacuated. For instance, during a category 1 hurricane, we would find it acceptable to only evacuate 50\% of the original population. Similarly, the proximity of the county in question should factor into that threshold.
     The formula we ended up using is the following:
     \begin{align*}
         threshold(c, h) = 0.1 \cdot 2^{||c-h||_2 / h.radius} \cdot \frac{1}{h.category}
     \end{align*}
     In addition to this, if a county is further away than 3 times the radius of the hurricane, that county does not need to be evacuated, and we tag it as a refugee state (it essentially has infinite threshold). Furthermore, category 1 hurricanes have a threshold minimum of 50\% (we do not require more than half of the population of any county to evacuate). 
     The heatmaps for those thresholds can be observed in Figure~\ref{fig:thresholds}. These were generated from a category 1 hurricane (a) that then grows in size (b) and finally becomes category 5 (c).
-    \begin{figure}
+    \begin{figure}[H]
       \center
       \begin{subfigure}[b]{0.3\textwidth}
         \center
@@ -169,7 +169,7 @@
   \subsection{Results}
     % TODO
       Figure~\ref{fig:pop_deter} shows the evolution of the populations of some example states during an evacuation. The Y-Axis shows the percentage of the original population is contained in that state, and the X-Axis is the number of hours that has elapsed since the evacuation order.
-    \begin{figure}
+    \begin{figure}[H]
       \center
       \begin{subfigure}[b]{0.3\textwidth}
         \center
