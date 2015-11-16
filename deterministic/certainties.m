@@ -20,7 +20,7 @@ for t=1:1:max_t
     curr_pop = A * curr_pop;
     % percentage of people still in counties
     percs = (curr_pop ./ pops);
-    percs = percs - thresholds;
+    percs = percs - ths;
     count = 0;
     for i=1:length(percs)
         if percs(i) > 0

@@ -4,6 +4,8 @@ from graph_tool.all import *
 import graph_tool.flow as gt
 import pickle as pk
 
+def create(nodeweights):
+
 
 if __name__ == "__main__":
     positions = pk.load(open("county_locations.dict"))
