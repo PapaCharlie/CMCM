@@ -22,6 +22,18 @@ def get_name_map(filename):
 
         return h
 
+def get_edges(filename, names):
+    with open(filename, 'rb') as csvfile:
+        pairs = []
+        r = csv.reader(csvfile)
+        for row in r:
+            a = names[row[0]]
+            b = names[row[1]]
+            t = (a, b, int(row[2]))
+            pairs.append(t)
+
+        return pairs
+
 def to_matlab(mat, mname = 'm'):
     s = mname + ' = ['
     for row in mat:

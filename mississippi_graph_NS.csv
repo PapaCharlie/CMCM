@@ -28,6 +28,7 @@ Montgomery,Grenada,3
 Webster,Calhoun,1
 Webster,Chickasaw,1
 Clay,Chickasaw,1
+Chickasaw,Pontotoc,2
 Clay,Monroe,2
 Lowndes,Monroe,2
 Lowndes,Clay,3
@@ -35,7 +36,6 @@ Noxubee,Lowndes,3
 Winston,Oktibbeha,2
 Winston,Choctaw,1
 Choctaw,Webster,2
-Leflore,Tallahatchie,1
 Sunflower,Bolivar,1
 Washington,Sunflower,2
 Humphreys,Sunflower,2
@@ -107,4 +107,5 @@ George,Greene,4
 Hancock,PearlRiver,1
 Harrison,Stone,3
 Jackson,George,3
+Issaquena,Sharkey,1
 Lee,Union,2
