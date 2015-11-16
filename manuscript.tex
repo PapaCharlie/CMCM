@@ -129,10 +129,44 @@
   \subsection{Parameter Values and Justification}
     Using our earlier values for the maximum flow rate of an edge, we can now use this
   \subsection{Results}
+    % TODO
+      Figure~\ref{fig:pop_deter} shows the evolution of the populations of some example states during an evacuation. The Y-Axis shows the percentage of the original population is contained in that state, and the X-Axis is the number of hours that has elapsed since the evacuation order.
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/pop_county_29-crop.pdf}
+        \caption{Population of Jackson}
+        \label{fig:pop_county60}
+      \end{subfigure}~
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/pop_county_39-crop.pdf}
+        \caption{Population of Leake}
+        \label{fig:pop_county39}
+      \end{subfigure}~
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/pop_county_60-crop.pdf}
+        \caption{Population of Rankin}
+        \label{fig:pop_county60}
+      \end{subfigure}
+      \caption{Evolution of populations during evacuation}
+      \label{fig:pop_deter}
+    \end{figure}
+    % TODO
+    % We tested against all 15 hurricanes
+    % For 14 of the 15 hurricanes, we managed to have the time to evacuation under 80 minutes.
+    % One hurricane (category 5) made the evacuation take longer than 100 days --> order evacuation imediately as soon as we see a cat 5
+
   \subsection{Strengths and Weaknesses}
     By aggregating population in the northernmost counties, this model has a limiting assumption that evacuees never leave Mississippi.
     In ensuring that every highway fulfills its maximum theoretical utilization, this model assumes that evacuations are disorderly and don't follow any government mandated routes. Every citizen is told to simply flee, and they find the path of least resistance. This makes this model a good baseline for comparing more though fully orchestrated plans. 
     Another strength of this model is that it intelligently decides evacuation priorities based on expected landfall. This allows for a more optimal solution to ensure we don't overreact to low class hurricanes, providing a minimal impact to the normal functioning of these counties.
+    % We can get an estimate of how long we need to evacuate based on the specs of the hurricane
+    % Its not a one-size-fits all which is good and bad
+    By aggregating population in the northernmost counties, this model as a limiting assumption that evacuees never leave Mississippi.
+
 
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}
 \label{sec:maxflow}
@@ -170,10 +204,11 @@
         t^* &= \frac{532480}{21000}\\
         t^* &= 25 \text{hrs}
     \end{align*}
-    So according to this model, if we decided to evacuate everyone in the southern counties all at once, it would take upwards of a day to get everyone to safe counties.
+    So according to this model, if we decided to evacuate everyone in the southern counties all at once, it would take upwards of a day to get everyone to safe counties. Just to be safe, we can wait until two days prior to landfall before we order county wide evacuations.
   \subsection{Strengths and Weaknesses}
-    % TODO
-    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation.
+    This model gives us a piece of information that no other model really touches: the roads that create a bottleneck in the evacuation. % TODO FINISH THIS
+    % Weaknesses
+    This model assumes a best case scenario for the utilization of the roads, whereas in reality, people will rarely use the fastest path to a destination. Their behavior will make for a much slower evacuation. We don't really have a way to tell each car what route it should or shouldn't take in order to make the evacuation as speedy as possible, as it would mean sacrificing some drivers for the benefit of others.
 
 \section{Stochastic Model of Landfall-Avodiant Evacuations}
 \label{sec:stochastic}
