@@ -48,10 +48,10 @@
 
 \lstdefinestyle{Matlab}{
   backgroundcolor=\color{Background},basicstyle=\ttfamily\small\setstretch{1},breaklines=true,
-  commentstyle=\color{mygreen},emph=[1]{for,end,break},emphstyle=[1]\color{red},frame=l,identifierstyle=\color{black},
-  keywordstyle=[2]{\color{black}},keywordstyle=\color{blue},language=Matlab,literate={~} {\texttildelow}{1},
-  morekeywords=[2]{1},morekeywords={matlab2tikz},numbers=left,numbersep=9pt,numberstyle={\tiny \color{black}},
-  showstringspaces=false,stringstyle=\color{mylilas},
+  commentstyle=\color{Comments}\slshape,emph=[1]{for,end,break},emphstyle=[1]\color{red},frame=l,identifierstyle=\color{black},
+  keywordstyle=[2]{\color{black}},keywordstyle={\color{blue}\bfseries},language=Matlab,literate={~} {\texttildelow}{1},
+  morekeywords=[2]{1},morekeywords={matlab2tikz},numbers=left,numbersep=1em,numberstyle=\footnotesize,
+  showstringspaces=false,stringstyle=\color{Strings},xleftmargin=1em,
 }
 
 \begin{document}
@@ -118,12 +118,15 @@
       \includegraphics[width=.5\textwidth]{figures/full_directed_NS.pdf}
       \caption{Map of Northbound Highway Routes in the State of Mississippi \cite{ms_highways}}
     \end{figure}
-    The thickness of each arrow in this graph represents the transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to a destination node during a single update. In order We standardize the time interval of an update to be one hour, and track the number of people in every county after each update in the 4 day period before landfall.
+    The thickness of each arrow in this graph represents the magnitue of transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to another county during a single update. The remaining population that does not leave a county during a single time step implicitly loops back into the same node. Note that for the counties along the northern border of Mississippi, this necessitates a strictly looping behavior because there are no further northern counties. This results in a key assumption that the evacuated population aggregates in the northernmost counties over time, where they are considered to be completely safe from the hurricane. \\
+    \\
+    A second key assumption is that the transition probabilities of the graph remain fixed over the entire course of the simulation. The real world implications of this are that county populations converge towards 0 rather than allowing for a full evacuation in a finite number of time steps. This is an assumption that we deem  We standardize the time for an update to be one hour, and track the number of people in every county through the 4 day period before landfall.
 
   \subsection{Parameter Values and Justification}
-    Using our earlier values for the maximum flow rate of an edge, we can now use this 
+    Using our earlier values for the maximum flow rate of an edge, we can now use this
   \subsection{Results}
   \subsection{Strengths and Weaknesses}
+    By aggregating population in the northernmost counties, this model as a limiting assumption that evacuees never leave Mississippi.
 
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}
 \label{sec:maxflow}
@@ -136,7 +139,7 @@
     \par It is worth noting that we did not consider the interactions with the other states as that would require knowing a lot more things about the highway systems and tendencies of the evacuees in those states. We also assumed that the counties that would need to be evacuated are the ones on the southern border of Mississippi; we will call them the evacuated counties.
   \subsection{Results}
   \par We computeed the max flow using a min-cut algorithm that was implemented as part of the Python \texttt{graph-tool} library \cite{graphtool}. Since the units of road are all integers, we expected an integer as the maximum flow through the graph (South to North), and that value turned out to be 21000 people moving in that direction per hour. The partitions are shown in red and blue in Figure~\ref{fig:oldmaxflow}.
-  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster). 
+  \par The interesting part, though, is that this information tells us where the bottleneck is in terms of transportation. By inspection, we can see that a new road linking counties 20 and 56 (George to Perry, located on the south east corner of the state) could increase the maximum flow number, as well as push the congestion areas further north (which means people can get further away from the hurricanes faster).
   Indeed, after making this change, the max flow increased by over 25\% to 27000, and the partitions split much further north than before the addition of that road. Figure~\ref{fig:newmaxflow}
     \begin{figure}
       \center
