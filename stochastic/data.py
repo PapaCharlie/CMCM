@@ -86,7 +86,10 @@ def load_highways():
     out_of_state = [('OOS1',82),('OOS2',83),('OOS3',84),('OOS4',85),('OOS5',86),('OOS6',87)]
     with open('../mississippi_county.list') as f:
         county_map = dict(map(lambda (x,y): (y.strip(),x), enumerate(f.readlines())) + out_of_state)
-    for line in open('../mississippi_graph.csv'):
+    for line in open('../mississippi_graph_NS.csv'):
+        c1,c2,cap = line.strip().split(',')
+        highways[ordered_tuple(county_map[c1], county_map[c2])] = int(cap)
+    for line in open('../mississippi_graph_EW.csv'):
         c1,c2,cap = line.strip().split(',')
         highways[ordered_tuple(county_map[c1], county_map[c2])] = int(cap)
 

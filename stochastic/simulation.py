@@ -21,7 +21,12 @@ def main(predictions):
             second_degree_neighbors = filter(lambda c: not County(c).out_of_state, second_degree_neighbors)
             for neighbor in second_degree_neighbors:
                 County(neighbor).escape(hurricanes[stage], highway_quotas)
-            hours.append(map(lambda c: County(c).get_population(), bad_counties))
+            pops = map(lambda c: County(c).get_population(), bad_counties)
+            hours.append(pops)
+            if all(map(lambda p: p == 0, pops)):
+                print bad_counties
+                print map(lambda c: County(c).get_county_name(), bad_counties)
+                return hours
 
     print bad_counties
     print map(lambda c: County(c).get_county_name(), bad_counties)
@@ -39,4 +44,5 @@ if __name__ == '__main__':
     hours = main(args)
 
     s = "m = [" + ";\n".join(map(lambda h: "[" + ",".join(map(str, h)) + "]", hours)) + "]"
+    print s
     open('populations_per_hour.m', 'w').write(s)
