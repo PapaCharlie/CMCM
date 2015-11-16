@@ -172,11 +172,11 @@ Paul Chesnais, Antoine Pourchet, and Ryan Vogan
       \includegraphics[width=.5\textwidth]{figures/full_directed_NS.pdf}
       \caption{Map of Northbound Highway Routes in the State of Mississippi \cite{ms_highways}}
     \end{figure}
-    The thickness of each arrow in this graph represents the magnitude of transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to another county during a single update. The remaining population that does not leave a county during a single time step implicitly loops back into the same node. This fulfills a conservation of probability required for all Markov models, preventing population from slowing leaking out of the system. Note that for the counties along the northern border of Mississippi, this necessitates a strictly looping behavior because there are no further northern counties. This results in a key assumption that the evacuated population aggregates in the northernmost counties over time, where they are considered to be completely safe from the hurricane. \\
+    The thickness of each arrow in this graph represents the magnitude of a transition probability from one node to another. In evacuation terms, these are the proportions of a county's population that travel to another county during a single update. The remaining population that does not leave a county during a single step implicitly loops back into the same node. This fulfills the conservation of probability required for all Markov models, preventing population from slowing leaking out of the system. Note that for the counties along the northern border of Mississippi, this necessitates a strictly looping behavior because there are no further northern counties. This results in a key assumption that the evacuated population aggregates in the northernmost counties over time, where they are considered to be completely safe from the hurricane. \\
     \\
-    A second key assumption is that the transition probabilities of the graph remain fixed over the entire course of the simulation. The real world implications of this are that county populations converge toward 0 rather than allowing for a full evacuation in a finite number of time steps. We consider this assumption to be reasonable because in a real world scenario it becomes increasingly difficult to evacuate straggling population members who have a reduced mobility due to age, poverty, and/or other factors. \\
+    A second key assumption is that the transition probabilities of the graph remain fixed over the entire course of the simulation. The real world implications of this are that county populations converge toward 0 rather than allowing for a full evacuation in a finite number of time steps. We consider this assumption to be reasonable because in a real world scenario it becomes increasingly difficult to evacuate straggling population members who have a reduced mobility due to age, poverty, or other factors. \\
 
-    In order to run this algorithm, we first initialize a vector of county populations and matrix of transition probabilities. While the initial county populations are drawn from census data \cite{census},justifications for the transition probabilities can be found in the next section. We standard the time step for an update to be one hour such that multiplying the transition matrix and the current population vector gives the population distribution at the next hour. We do this until one of two termination criteria are met:
+    In order to run this algorithm, we first initialize a vector of county populations and matrix of transition probabilities. While the initial county populations are drawn from census data \cite{census}, justifications for the transition probabilities can be found in the next section. We standardize the time step for an update to be one hour such that multiplying the transition matrix and the current population vector gives the population distribution at the next hour. We do this until one of two termination criteria are met:
     \begin{itemize}
       \item[1.]
         The hurricane arrives after 96 time steps
@@ -184,18 +184,16 @@ Paul Chesnais, Antoine Pourchet, and Ryan Vogan
         All population counts are below a predetermined, county-specific threshold
     \end{itemize}
 
-    Once the termination occurs, we evaluate the success of the evacuation in relation to our quotas determined by predicted landfall of a hurricane. This hurricane will be one randomly chosen from those found from historical data. If population thresholds are not met within the full 4 day advance notice period, we suggest that the state be evacuated at first warning. Otherwise, evacuate in advance the number of hours required to meet the desired thresholds.
+    Once termination occurs, we evaluate the number of people evacuated in relation to quotas we determine using predicted landfall of a hurricane. This hurricane will be one randomly chosen from historical data. If population thresholds are not met within the full 4 day advance notice period, we suggest that the state be evacuated at first warning. Otherwise, evacuate in advance the number of hours required to meet the desired thresholds.
 
   \subsection{Parameter Values and Justification}
-    Using our earlier values for the maximum flow rate of an edge, we can now use them to derive transition probabilities for our Markov model. Because the maximum capacity of a road is 3000 times it's weight in the graph, this can be used to give the total population emanating from a county in the first hour of the simulation. If we find the ratios of these values along each edge to the initial population in the county, this gives us a good approximation of the percentage of a county that flees in any given time step. Again we assume these proportions are constant for each edge and ensure conservation of probability through the whole graph. We ensured this conservation of probability by ensuring a constant population throughout the state at every time step.\\
+    With our earlier values for the maximum flow rate of an edge, we can now use them to derive transition probabilities for our Markov model. Because the maximum capacity of a road is 3000 times its weight in the graph, this can be used to give the total population emanating from a county in the first hour of the simulation. If we find the ratio of these values along each emanating edge to the initial county population, this gives us a good approximation of the percentage of a county that flees in any given time step. Again we assume these proportions are constant for each edge and ensure conservation of probability through the whole graph. We check conservation of probability by checking that the total population remains constant throughout the simulation.\\
     \\
-    In order to get the threshold for each county based on the hurricane characteristics, we created a function that would give us the proportion of the original population that did not need to be evacuated. For instance, during a category 1 hurricane, we would find it acceptable to only evacuate 50\% of the original population. Similarly, the proximity of the county in question should factor into that threshold.
-    The formula we ended up using is the following:
+    In order to get the threshold for each county based on the hurricane characteristics, we created a function that would give us the proportion of the original population that did not need to be evacuated. For instance, during a category 1 hurricane, we would find it acceptable to only evacuate 50\% of the original population. In addition to this, we required that the proximity of the county in question should factor into that threshold. The formula we ended up using is the following:
     \begin{align*}
         threshold(c, h) = 0.1 \cdot 2^{||c-h||_2 / h.radius} \cdot \frac{1}{h.category}
     \end{align*}
-    In addition to this, if a county is further away than 3 times the radius of the hurricane, that county does not need to be evacuated, and we tag it as a refugee state (it essentially has infinite threshold). Furthermore, category 1 hurricanes have a threshold minimum of 50\% (we do not require more than half of the population of any county to evacuate).
-    The heatmaps for those thresholds can be observed in Figure~\ref{fig:thresholds}. These were generated from a category 1 hurricane (a) that then grows in size (b) and finally becomes category 5 (c).
+    Where c is the position of the county we are considering, h is the center of the predicted hurricane, and h.category is the category of the predicted hurricane. The relationship between these variables was chosen so that distance from the landfall would dominate the evacuation requirements, but they still get scaled by the category.This formula only applies for county coordinates within 3 hurricane radii of the landfall. If a county is further away than 3 times the radius of the hurricane, that county does not need to be evacuated, and we tag it as a refugee state (it essentially has infinite threshold). Furthermore, category 1 hurricanes have a threshold minimum of 50\% (we do not require more than half of the population of any county to evacuate). The heatmaps for those thresholds can be observed in Figure~\ref{fig:thresholds}. These were generated from a category 1 hurricane (a) that then grows in size (b) and finally becomes category 5 (c). Red nodes indicate counties where a majority of the population needs to be evacuated. Green nodes represent counties that are safe from significant hurricane damage:
     \begin{figure}[H]
       \center
       \begin{subfigure}[b]{0.3\textwidth}
@@ -246,21 +244,15 @@ Paul Chesnais, Antoine Pourchet, and Ryan Vogan
       \caption{Evolution of populations during evacuation}
       \label{fig:pop_deter}
     \end{figure}
-    % TODO
-    % We tested against all 15 hurricanes
-    % For 14 of the 15 hurricanes, we managed to have the time to evacuation under 80 minutes.
-    % One hurricane (category 5) made the evacuation take longer than 100 days --> order evacuation imediately as soon as we see a cat 5
+
+    Running our test algorithm across all 15 hurricanes in our historical dataset, we found that 14 out of the 15 satisfied their threshold requirements within 80 hours of the evacuation start. Our recommendation for these hurricanes is to start the evacuation 80 hours before expected landfall. The one exception to this was a category 5 hurricane in the dataset. This hurricane took over 100 days to see the desired evacuation percentages, so we recommend an immediate and full evacuation.
 
   \subsection{Strengths and Weaknesses}
-    By aggregating population in the northernmost counties, this model has a limiting assumption that evacuees never leave Mississippi.
-    In ensuring that every highway fulfills its maximum theoretical utilization, this model assumes that evacuations are disorderly and don't follow any government mandated routes. Every citizen is told to simply flee, and they find the path of least resistance. This makes this model a good baseline for comparing more though fully orchestrated plans.
+    A weakness of this model is that by aggregating population in the northernmost counties, we have a limiting assumption that evacuees never leave Mississippi. In reality they may want to flee to Arkansas or Alabama, rather then going all the way to the top of Mississippi. Also by having nonzero transition probabilities on every edge, citizens may flee northward when they are already in a safe zone.\\
+    \\
+    In ensuring that every highway fulfills its maximum theoretical utilization, this model assumes that evacuations are disorderly and don't follow any government mandated routes. Every citizen is told to simply flee, and they find the path of least resistance. This makes this model a good baseline for comparing more though fully orchestrated plans.\\
+    \\
     Another strength of this model is that it intelligently decides evacuation priorities based on expected landfall. This allows for a more optimal solution to ensure we don't overreact to low class hurricanes, providing a minimal impact to the normal functioning of these counties.
-    % We can get an estimate of how long we need to evacuate based on the specs of the hurricane
-    % Its not a one-size-fits all which is good and bad
-    By aggregating population in the northernmost counties, this model as a limiting assumption that evacuees never leave Mississippi.
-    Weakness that people flee even if they are aleady in the safe zone.
-    Weak in the
-
 
 \section{Maximum Flow Analysis of Strictly Northern Evacuations}
 \label{sec:maxflow}
